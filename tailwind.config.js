@@ -2,11 +2,13 @@ var colors = require("tailwindcss/colors");
 
 module.exports = {
 	content: ["./app/**/*.{ts,tsx}"],
+	darkMode: "class",
 	theme: {
 		colors: {
 			transparent: "transparent",
 			current: "currentColor",
 			white: "#ffffff",
+			black: "#000000",
 			brand: {
 				dark: "#4B14B8",
 				DEFAULT: "#8001FF",
@@ -26,23 +28,39 @@ module.exports = {
 				},
 			},
 			semantic: {
-				error: colors.red,
-				success: colors.emerald,
-				warning: colors.amber,
+				error: {
+					DEFAULT: colors.red[500],
+					dark: colors.red[700],
+					light: colors.red[100],
+				},
+				success: {
+					DEFAULT: colors.emerald[500],
+					dark: colors.emerald[700],
+					light: colors.emerald[100],
+				},
+				warning: {
+					DEFAULT: colors.yellow[500],
+					dark: colors.yellow[700],
+					light: colors.yellow[100],
+				},
 			},
-			neutral: {
-				100: "#F0F2F5",
-				200: "#E0E4EB",
+			gray: {
+				50: "#F9FAFB",
+				100: "#EFF2F5",
+				200: "#E1E4EA",
 				300: "#C2C9D6",
-				400: "#A3ADC2",
-				500: "#8591AD",
+				400: "#8592AD",
+				500: "#6A7795",
 				600: "#525C7A",
-				700: "#394360",
+				700: "#394260",
 				800: "#242A42",
 				900: "#0D1126",
 			},
 		},
 		extend: {},
 	},
-	plugins: [require("@tailwindcss/typography")],
+	plugins: [
+		require("@tailwindcss/typography"),
+		require("@tailwindcss/forms"),
+	],
 };

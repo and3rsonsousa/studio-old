@@ -6,21 +6,18 @@ import {
 	Scripts,
 	ScrollRestoration,
 } from "remix";
-import type { MetaFunction } from "remix";
+import type { MetaFunction, LinksFunction } from "remix";
 
 import styles from "./tailwind.css";
 
-export function links() {
-	return [
-		{ rel: "stylesheet", href: styles },
-		{ rel: "icon", type: "image/png", href: "/favicon.png" },
-	];
-}
+export const links: LinksFunction = () => [
+	{ rel: "stylesheet", href: styles },
+	{ rel: "icon", type: "image/png", href: "/favicon.png" },
+];
 
 export const meta: MetaFunction = () => {
 	// return { title: "STUDIO > CNVT" };
 	return { title: "𝗦𝗧𝗨𝗗𝗜𝗢 > 𝗖𝗡𝗩𝗧" };
-	// return { title: "ꜱᴛᴜᴅɪᴏ > ᴄɴᴠᴛ" };
 };
 
 export default function App() {
