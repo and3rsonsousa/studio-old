@@ -14,10 +14,13 @@ export default async function ({ username, password }: LoginForm) {
 	const { profiles } = await graphcms.request(gql`{
 		profiles(where: { username: "${username}" }){
 			id
+			password
 			}
 		}`);
 
 	if (!profiles[0]) return null;
+
+	console.log("TESTE", password, profiles[0].password);
 
 	const isCorrectPassword = await bcrypt.compare(
 		password,
@@ -29,14 +32,17 @@ export default async function ({ username, password }: LoginForm) {
 	return profiles[0];
 }
 
-const sessionSecret = process.env.SESSION_SECRET;
+const sessionSecret =
+	process.env.NODE_ENV === "production"
+		? process.env.SESSION_SECRET
+		: "secret";
 if (!sessionSecret) {
 	throw new Error("SESSION_SECRET must be set");
 }
 
 const storage = createCookieSessionStorage({
 	cookie: {
-		name: "RJ_session",
+		name: "Studio_CNVT_Session",
 		// normally you want this to be `secure: true`
 		// but that doesn't work on localhost for Safari
 		// https://web.dev/when-to-use-local-https/

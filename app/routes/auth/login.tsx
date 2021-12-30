@@ -5,7 +5,7 @@ import {
 	HiOutlineLockClosed as LockClosed,
 	HiOutlineLockOpen as LockOpen,
 } from "react-icons/hi";
-import login from "../../utils/session.server";
+import login, { createUserSession } from "../../utils/session.server";
 
 // interface LoginData {
 // 	username: FormDataEntryValue | null;
@@ -47,7 +47,11 @@ export const action: ActionFunction = async ({ request }) => {
 			fields,
 		});
 
-	if (typeof username !== "string" || typeof password !== "string") {
+	if (
+		typeof username !== "string" ||
+		typeof password !== "string" ||
+		typeof redirectTo !== "string"
+	) {
 		return badRequest({ errors: { login: "Dados inválidos" } });
 	}
 	const profile = await login({ username, password });
@@ -59,10 +63,7 @@ export const action: ActionFunction = async ({ request }) => {
 		});
 	}
 
-	return badRequest({
-		fields,
-		errors: { login: "Ainda não foi implementado" },
-	});
+	return createUserSession(profile.id, redirectTo);
 };
 
 export default () => {
