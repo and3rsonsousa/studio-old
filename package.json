@@ -16,6 +16,8 @@
 		"@remix-run/vercel": "^1.1.1",
 		"@tailwindcss/forms": "^0.4.0",
 		"bcrypt": "^5.0.1",
+		"color": "^4.1.0",
+		"framer-motion": "^5.5.5",
 		"graphql": "^16.2.0",
 		"graphql-request": "^3.7.0",
 		"react": "^17.0.2",

@@ -5,7 +5,10 @@ import {
 	HiOutlineLockClosed as LockClosed,
 	HiOutlineLockOpen as LockOpen,
 } from "react-icons/hi";
-import login, { createUserSession } from "../../utils/session.server";
+import login, {
+	createUserSession,
+	getUserSession,
+} from "../../utils/session.server";
 
 // interface LoginData {
 // 	username: FormDataEntryValue | null;
@@ -27,6 +30,8 @@ interface ActionData {
 const badRequest = (data: {}) => json(data, { status: 400 });
 
 export const action: ActionFunction = async ({ request }) => {
+	console.log("USER => ", getUserSession(request));
+
 	const form = await request.formData();
 	const username = form.get("username");
 	const password = form.get("password");
@@ -70,8 +75,6 @@ export default () => {
 	const actionData = useActionData<ActionData>();
 	const [searchParams] = useSearchParams();
 	const [showPassword, setShowPassword] = useState(false);
-
-	console.log(actionData);
 
 	return (
 		<div className="flex items-center justify-center min-h-screen p-8 bg-gray-50 ">

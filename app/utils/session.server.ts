@@ -20,8 +20,6 @@ export default async function ({ username, password }: LoginForm) {
 
 	if (!profiles[0]) return null;
 
-	console.log("TESTE", password, profiles[0].password);
-
 	const isCorrectPassword = await bcrypt.compare(
 		password,
 		profiles[0].password
@@ -54,6 +52,69 @@ const storage = createCookieSessionStorage({
 		httpOnly: true,
 	},
 });
+
+export function getUserSession(request: Request) {
+	return storage.getSession(request.headers.get("Cookie"));
+}
+
+export async function getUserId(request: Request) {
+	const session = await getUserSession(request);
+	const userId = session.get("userId");
+	if (!userId || typeof userId !== "string") return null;
+	return userId;
+}
+
+export async function requireUserId(
+	request: Request,
+	redirectTo: string = new URL(request.url).pathname
+) {
+	const session = await getUserSession(request);
+	const userId = session.get("userId");
+	if (!userId || typeof userId !== "string") {
+		const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
+		throw redirect(`/auth/login?${searchParams}`);
+	}
+	return userId;
+}
+
+export async function getUser(request: Request) {
+	const userId = await getUserId(request);
+	if (typeof userId !== "string") {
+		return null;
+	}
+
+	try {
+		const graphcms = new GraphQLClient(
+			"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master"
+		);
+		const { profile } = await graphcms.request(gql`{
+		profile(where: { id: "${userId}" }){
+			id
+			name
+			username
+			image{
+				url(transformation: {image: {resize: {width: 30, height: 30, fit: clip}}})
+				
+			}
+		}
+		}`);
+
+		if (!profile) return null;
+
+		return profile;
+	} catch {
+		throw logout(request);
+	}
+}
+
+export async function logout(request: Request) {
+	const session = await storage.getSession(request.headers.get("Cookie"));
+	return redirect("/auth/login", {
+		headers: {
+			"Set-Cookie": await storage.destroySession(session),
+		},
+	});
+}
 
 export async function createUserSession(userId: string, redirectTo: string) {
 	const session = await storage.getSession();

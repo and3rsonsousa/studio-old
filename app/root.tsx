@@ -17,7 +17,7 @@ export const links: LinksFunction = () => [
 
 export const meta: MetaFunction = () => {
 	// return { title: "STUDIO > CNVT" };
-	return { title: "𝗦𝗧𝗨𝗗𝗜𝗢 > 𝗖𝗡𝗩𝗧" };
+	return { title: "> 𝗦𝗧𝗨𝗗𝗜𝗢 by 𝗖𝗡𝗩𝗧" };
 };
 
 export default function App() {
@@ -34,6 +34,7 @@ export default function App() {
 			</head>
 			<body>
 				<Outlet />
+
 				<ScrollRestoration />
 				<Scripts />
 				{process.env.NODE_ENV === "development" && <LiveReload />}
