@@ -77,31 +77,18 @@ export async function requireUserId(
 	return userId;
 }
 
-export async function getUser(request: Request) {
-	const userId = await getUserId(request);
-	if (typeof userId !== "string") {
-		return null;
-	}
-
+export async function getData(request: Request, QUERY: string) {
 	try {
 		const graphcms = new GraphQLClient(
 			"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master"
 		);
-		const { profile } = await graphcms.request(gql`{
-		profile(where: { id: "${userId}" }){
-			id
-			name
-			username
-			image{
-				url(transformation: {image: {resize: {width: 30, height: 30, fit: clip}}})
-				
-			}
+
+		try {
+			const data = await graphcms.request(QUERY);
+			return data;
+		} catch (error) {
+			return error;
 		}
-		}`);
-
-		if (!profile) return null;
-
-		return profile;
 	} catch {
 		throw logout(request);
 	}

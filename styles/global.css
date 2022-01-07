@@ -8,27 +8,42 @@ body {
 
 @layer components {
 	.button {
-		@apply flex items-center justify-center px-4 py-3 space-x-2 transition bg-gray-100 rounded-lg outline-none hover:bg-gray-200 focus:ring focus:ring-brand dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700;
+		@apply flex items-center px-4 py-3 space-x-4 font-normal text-gray-600 transition bg-gray-100 rounded-lg outline-none hover:bg-gray-200 focus:ring focus:ring-brand dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 active:scale-95 hover:text-gray-800;
 	}
 
-	/* .button-small {
-		@apply p-1 text-sm rounded-lg;
+	.button-small {
+		@apply p-3 space-x-2 text-sm;
+	}
+
+	.button-full {
+		@apply justify-center w-full;
 	}
 
 	.button-ghost {
-		@apply bg-transparent border-transparent shadow-none;
+		@apply bg-transparent;
 	}
 
-	.button-text {
-		@apply p-0 bg-transparent shadow-none hover:bg-transparent focus:bg-transparent hover:text-gray-5;
-	} */
+	.button-invisible {
+		@apply bg-transparent hover:bg-white hover:shadow;
+	}
 
 	.button-primary {
-		@apply text-white shadow-xl bg-brand border-brand hover:bg-brand-dark focus:bg-brand-dark focus:text-white shadow-brand/30;
+		@apply text-white shadow-xl bg-brand hover:bg-brand-dark focus:bg-brand-dark focus:text-white shadow-brand/30 hover:text-white active:bg-brand;
 	}
-	/*
 
-	.button-red {
-		@apply hover:bg-red-500 hover:text-red-100;
+	.page {
+		@apply w-full px-8 py-4;
+	}
+
+	.page-over {
+		@apply p-8 prose bg-white rounded-lg shadow-md;
+	}
+
+	.input {
+		@apply w-full font-light border-gray-300 rounded-lg shadow-sm shadow-gray-200 focus:border-brand hover:border-gray-400;
+	}
+
+	/* .input-invisible {
+		@apply w-full px-0 bg-transparent border-0 border-b-2 border-transparent focus:text-gray-800 focus:ring-0 focus:border-b-2 focus:border-brand hover:border-b-2 hover:border-gray-200;
 	} */
 }

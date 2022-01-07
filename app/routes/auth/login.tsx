@@ -79,7 +79,8 @@ export default () => {
 	return (
 		<div className="flex items-center justify-center min-h-screen p-8 bg-gray-50 ">
 			<div className="container max-w-xs p-8 mx-auto prose bg-white shadow-2xl shadow-gray-300 rounded-xl ">
-				<h3>Login</h3>
+				<h2 className="text-brand ">STUDIO</h2>
+				<h4>Login</h4>
 				<form method="POST">
 					{actionData?.errors?.login && (
 						<div className="p-2 text-xs rounded-lg error bg-semantic-error-light text-semantic-error-dark">
@@ -105,7 +106,7 @@ export default () => {
 								id="username"
 								placeholder="Seu username"
 								defaultValue={actionData?.fields?.username}
-								className="w-full font-light border-gray-200 rounded-lg shadow-sm focus:ring-brand placeholder:text-gray-200"
+								className="input"
 							/>
 						</div>
 					</div>
@@ -127,10 +128,10 @@ export default () => {
 								id="password"
 								name="password"
 								placeholder="Sua senha"
-								className="w-full font-light border-r-0 border-gray-200 rounded-lg rounded-r-none shadow-sm focus:ring-brand placeholder:text-gray-200"
+								className="border-r-0 rounded-r-none input"
 							/>
 							<button
-								className="text-lg border rounded-l-none rounded-r-lg shadow-sm button"
+								className="text-lg border border-gray-300 rounded-l-none rounded-r-lg shadow-sm button"
 								onClick={(event) => {
 									event?.preventDefault();
 									setShowPassword(!showPassword);

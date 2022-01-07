@@ -8,7 +8,7 @@ import {
 } from "remix";
 import type { MetaFunction, LinksFunction } from "remix";
 
-import styles from "./tailwind.css";
+import styles from "./app.css";
 
 export const links: LinksFunction = () => [
 	{ rel: "stylesheet", href: styles },
