@@ -5,7 +5,12 @@ import { User } from "~/types";
 export default ({ user }: { user: User }) => (
 	<div className="flex-shrink-0 min-h-screen prose bg-gray-100 border-r w-52 prose-a:no-underline">
 		<div className="px-8 py-4 logo">
-			<h4 className="m-0 text-lg font-black text-brand">STUDIO</h4>
+			<Link to="/dashboard" className="block w-24 my-4">
+				<img src="/logo.svg" alt="STUDIO" className="m-0" />
+				<div className="text-[10px] text-right text-gray-400 tracking-wider mr-1">
+					BY CNVT
+				</div>
+			</Link>
 		</div>
 		<div className="px-8 py-2">
 			<h5 className="m-0 text-xs font-medium tracking-wider text-gray-400 uppercase">
@@ -30,13 +35,13 @@ export default ({ user }: { user: User }) => (
 			<div className="flex">
 				<Link
 					to="/profile"
-					className="button button-small button-ghost whitespace-nowrap"
+					className="button button-small button-invisible whitespace-nowrap"
 				>
 					Minha conta
 				</Link>
 				<form action="/auth/logout" method="post" className="flex">
 					<button
-						className="button button-small button-ghost whitespace-nowrap"
+						className="button button-small button-invisible whitespace-nowrap"
 						type="submit"
 					>
 						<HiOutlineLogout className="text-lg" />
