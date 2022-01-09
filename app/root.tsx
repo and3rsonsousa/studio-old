@@ -5,6 +5,7 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
+	useTransition,
 } from "remix";
 import type { MetaFunction, LinksFunction } from "remix";
 
@@ -21,6 +22,7 @@ export const meta: MetaFunction = () => {
 };
 
 export default function App() {
+	const transition = useTransition();
 	return (
 		<html lang="pt-br">
 			<head>
@@ -34,6 +36,11 @@ export default function App() {
 			</head>
 			<body>
 				<Outlet />
+				{transition.state === "loading" ? (
+					<div className="fixed top-0 right-0 p-4">
+						<div className="w-8 h-8 border-4 rounded-full border-interdimensional border-t-outrageous animate-spin"></div>
+					</div>
+				) : null}
 
 				<ScrollRestoration />
 				<Scripts />

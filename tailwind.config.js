@@ -9,24 +9,16 @@ module.exports = {
 			current: "currentColor",
 			white: "#ffffff",
 			black: "#000000",
-			brand: {
+			gray: colors.slate,
+			interdimensional: {
 				dark: "#4B14B8",
 				DEFAULT: "#8001FF",
 				light: "#5768FF",
-				orange: {
-					DEFAULT: "#FA6938",
-					dark: "#C20041",
-					light: "#FF971F",
-				},
-				teal: {
-					DEFAULT: "#26D9B8",
-					light: "#5EEDBE",
-				},
-				yellow: {
-					DEFAULT: "#F5C73D",
-					light: "#F6DB55",
-				},
 			},
+			outrageous: "#FA6938",
+			pacific: "#26D9B8",
+			mikado: "#F5C73D",
+
 			semantic: {
 				error: {
 					DEFAULT: colors.red[500],
@@ -44,24 +36,29 @@ module.exports = {
 					light: colors.yellow[100],
 				},
 			},
-			// gray: {
-			// 	50: "#F9FAFB",
-			// 	100: "#EFF2F5",
-			// 	200: "#E1E4EA",
-			// 	300: "#C2C9D6",
-			// 	400: "#8592AD",
-			// 	500: "#6A7795",
-			// 	600: "#525C7A",
-			// 	700: "#394260",
-			// 	800: "#242A42",
-			// 	900: "#0D1126",
-			// },
-			gray: colors.slate,
+			idea: colors.yellow,
+			do: colors.orange,
+			doing: colors.rose,
+			review: colors.purple,
+			done: colors.blue,
+			accomplished: colors.lime,
+
+			post: colors.purple,
+			stories: colors.rose,
+			reels: colors.orange,
+			meeting: colors.yellow,
+			copy: colors.emerald,
+			video: colors.sky,
+			shooting: colors.blue,
+			press: colors.indigo,
+			task: colors.lime,
+			tiktok: colors.pink,
 		},
 		extend: {},
 	},
 	plugins: [
 		require("@tailwindcss/typography"),
 		require("@tailwindcss/forms"),
+		require("@tailwindcss/line-clamp"),
 	],
 };

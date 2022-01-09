@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 interface User {
 	id: string;
 	name?: string;
@@ -19,4 +21,20 @@ interface Account {
 	image?: { url: string };
 }
 
-export type { User, Account };
+interface Action {
+	id: string;
+	name: string;
+	description?: string;
+	profile_responsible?: User;
+	startDate?: any;
+	endDate?: any;
+	step?: Basic;
+}
+
+interface Basic {
+	id: string;
+	name: string;
+	slug?: string;
+}
+
+export type { User, Account, Action };

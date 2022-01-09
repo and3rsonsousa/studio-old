@@ -30,8 +30,6 @@ interface ActionData {
 const badRequest = (data: {}) => json(data, { status: 400 });
 
 export const action: ActionFunction = async ({ request }) => {
-	console.log("USER => ", getUserSession(request));
-
 	const form = await request.formData();
 	const username = form.get("username");
 	const password = form.get("password");
@@ -79,7 +77,7 @@ export default () => {
 	return (
 		<div className="flex items-center justify-center min-h-screen p-8 bg-gray-50 ">
 			<div className="container max-w-xs p-8 mx-auto prose bg-white shadow-2xl shadow-gray-300 rounded-xl ">
-				<h2 className="text-brand ">STUDIO</h2>
+				<h2 className="text-interdimensional ">STUDIO</h2>
 				<h4>Login</h4>
 				<form method="POST">
 					{actionData?.errors?.login && (

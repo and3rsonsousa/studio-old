@@ -1,6 +1,6 @@
 import { Link, Outlet } from "remix";
 import { Account } from "~/types";
-import Avatar from "./Avatar";
+import Avatar from "../Avatar";
 
 export default ({ account }: { account: Account }) => (
 	<div className="page">

@@ -1,5 +1,5 @@
 import { LoaderFunction, useLoaderData } from "remix";
-import Action from "~/components/Action";
+import Action from "~/components/Actions/Actions";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
 	return params.account;

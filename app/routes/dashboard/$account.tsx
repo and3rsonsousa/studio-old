@@ -1,7 +1,7 @@
 import { LoaderFunction, redirect, useLoaderData } from "remix";
 import { getData } from "~/utils/session.server";
 import { gql } from "graphql-request";
-import Account from "~/components/Account";
+import Account from "~/components/Account/Account";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
 	if (request.url.indexOf("/actions") === -1)

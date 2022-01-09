@@ -8,7 +8,7 @@ body {
 
 @layer components {
 	.button {
-		@apply flex items-center px-4 py-3 space-x-4 font-normal text-gray-600 transition bg-gray-100 rounded-lg outline-none hover:bg-gray-200 focus:ring focus:ring-brand dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 active:scale-95 hover:text-gray-800;
+		@apply flex items-center px-4 py-3 space-x-4 font-normal text-gray-600 transition bg-gray-100 rounded-lg outline-none hover:bg-gray-200 focus:ring focus:ring-interdimensional dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 active:scale-95 hover:text-gray-800;
 	}
 
 	.button-small {
@@ -28,7 +28,11 @@ body {
 	}
 
 	.button-primary {
-		@apply text-white shadow-xl bg-brand hover:bg-brand-dark focus:bg-brand-dark focus:text-white shadow-brand/30 hover:text-white active:bg-brand;
+		@apply text-white shadow-xl bg-interdimensional hover:bg-interdimensional-dark focus:bg-interdimensional-dark focus:text-white shadow-interdimensional/30 hover:text-white active:bg-interdimensional;
+	}
+
+	.button-invert {
+		@apply text-gray-400 hover:bg-gray-700 hover:text-gray-300;
 	}
 
 	.page {
@@ -36,14 +40,76 @@ body {
 	}
 
 	.page-over {
-		@apply p-8 prose bg-white rounded-lg shadow-md;
+		@apply p-8 bg-white rounded-lg shadow-md shadow-gray-300/50;
 	}
 
 	.input {
-		@apply w-full font-light border-gray-300 rounded-lg shadow-sm shadow-gray-200 focus:border-brand hover:border-gray-400;
+		@apply w-full font-light border-gray-300 rounded-lg shadow-sm shadow-gray-200 focus:border-interdimensional hover:border-gray-400;
 	}
+}
 
-	/* .input-invisible {
-		@apply w-full px-0 bg-transparent border-0 border-b-2 border-transparent focus:text-gray-800 focus:ring-0 focus:border-b-2 focus:border-brand hover:border-b-2 hover:border-gray-200;
-	} */
+.idea-bg {
+	@apply border border-l-8 border-l-idea-500 hover:ring-4 hover:ring-idea-500 hover:ring-opacity-30 hover:border-idea-500;
+}
+
+.do-bg {
+	@apply border border-l-8 border-l-do-500 hover:ring-4 hover:ring-do-500 hover:ring-opacity-30 hover:border-do-500;
+}
+
+.doing-bg {
+	@apply border border-l-8 border-l-doing-500 hover:ring-4 hover:ring-doing-500 hover:ring-opacity-30 hover:border-doing-500;
+}
+
+.review-bg {
+	@apply border border-l-8 border-l-review-500 hover:ring-4 hover:ring-review-500 hover:ring-opacity-30 hover:border-review-500;
+}
+
+.done-bg {
+	@apply border border-l-8 border-l-done-500 hover:ring-4 hover:ring-done-500 hover:ring-opacity-30 hover:border-done-500;
+}
+
+.accomplished-bg {
+	@apply border border-l-8 border-l-accomplished-500 hover:ring-4 hover:ring-accomplished-500 hover:ring-opacity-30 hover:border-accomplished-500;
+}
+
+.post-bg {
+	@apply text-white bg-post-500 hover:bg-post-700;
+}
+.stories-bg {
+	@apply text-white bg-stories-500 hover:bg-stories-700;
+}
+.reels-bg {
+	@apply text-white bg-reels-500 hover:bg-reels-700;
+}
+.meeting-bg {
+	@apply text-white bg-meeting-500 hover:bg-meeting-700;
+}
+.copy-bg {
+	@apply text-white bg-copy-500 hover:bg-copy-700;
+}
+.video-bg {
+	@apply text-white bg-video-500 hover:bg-video-700;
+}
+.shooting-bg {
+	@apply text-white bg-shooting-500 hover:bg-shooting-700;
+}
+.press-bg {
+	@apply text-white bg-press-500 hover:bg-press-700;
+}
+.task-bg {
+	@apply text-white bg-task-500 hover:bg-task-700;
+}
+.tiktok-bg {
+	@apply text-white bg-tiktok-500 hover:bg-tiktok-700;
+}
+
+@layer utilities {
+	.text-xx {
+		font-size: 0.625rem;
+		line: 1rem;
+	}
+	.text-xxx {
+		font-size: 0.5rem;
+		line: 0.5rem;
+	}
 }

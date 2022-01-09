@@ -20,6 +20,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 				id
 				name
 				slug
+				colors{
+					hex
+				}
 			}
 		}
 		}`;
