@@ -18,7 +18,7 @@ export const links: LinksFunction = () => [
 
 export const meta: MetaFunction = () => {
 	// return { title: "STUDIO > CNVT" };
-	return { title: "> 𝗦𝗧𝗨𝗗𝗜𝗢 by 𝗖𝗡𝗩𝗧" };
+	return { title: "𝗦𝗧𝗨𝗗𝗜𝗢 ʙʏ ᴄɴᴠᴛ" };
 };
 
 export default function App() {

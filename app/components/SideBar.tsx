@@ -46,7 +46,7 @@ export default ({ user }: { user: IUser }) => {
 						<>
 							<img src="/logo.svg" alt="STUDIO" className="m-0" />
 							<div className="text-[10px] text-right text-gray-400 tracking-wider mr-1">
-								BY CNVT
+								ʙʏ cαɴɪᴠeᴛe
 							</div>
 						</>
 					)}

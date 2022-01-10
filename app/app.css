@@ -1325,6 +1325,14 @@ select {
   right: 0.75rem;
 }
 
+.bottom-0 {
+  bottom: 0px;
+}
+
+.left-0 {
+  left: 0px;
+}
+
 .z-10 {
   z-index: 10;
 }
@@ -1451,6 +1459,10 @@ select {
   height: 0.5rem;
 }
 
+.h-1 {
+  height: 0.25rem;
+}
+
 .h-screen {
   height: 100vh;
 }
@@ -1505,6 +1517,10 @@ select {
 
 .w-64 {
   width: 16rem;
+}
+
+.min-w-\[50px\] {
+  min-width: 50px;
 }
 
 .max-w-xs {
@@ -1696,6 +1712,10 @@ select {
   scroll-behavior: smooth;
 }
 
+.text-ellipsis {
+  text-overflow: ellipsis;
+}
+
 .whitespace-nowrap {
   white-space: nowrap;
 }
@@ -1728,6 +1748,11 @@ select {
 .rounded-l-none {
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
+}
+
+.rounded-b-lg {
+  border-bottom-right-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
 }
 
 .rounded-r-lg {
@@ -2053,6 +2078,10 @@ select {
   transition-duration: 300ms;
 }
 
+.duration-500 {
+  transition-duration: 500ms;
+}
+
 .line-clamp-3 {
   overflow: hidden;
   display: -webkit-box;
@@ -2073,32 +2102,6 @@ select {
 body {
   font-weight: 300;
 }
-
-/* 
-.idea-bg {
-	@apply border border-l-8 border-l-idea-500 hover:ring-4 hover:ring-idea-500 hover:ring-opacity-30 hover:border-idea-500;
-}
-
-.do-bg {
-	@apply border border-l-8 border-l-do-500 hover:ring-4 hover:ring-do-500 hover:ring-opacity-30 hover:border-do-500;
-}
-
-.doing-bg {
-	@apply border border-l-8 border-l-doing-500 hover:ring-4 hover:ring-doing-500 hover:ring-opacity-30 hover:border-doing-500;
-}
-
-.review-bg {
-	@apply border border-l-8 border-l-review-500 hover:ring-4 hover:ring-review-500 hover:ring-opacity-30 hover:border-review-500;
-}
-
-.done-bg {
-	@apply border border-l-8 border-l-done-500 hover:ring-4 hover:ring-done-500 hover:ring-opacity-30 hover:border-done-500;
-} 
-
-.accomplished-bg {
-	@apply border border-l-8 border-l-accomplished-500 hover:ring-4 hover:ring-accomplished-500 hover:ring-opacity-30 hover:border-accomplished-500;
-}
-*/
 
 .idea-bg {
   --tw-bg-opacity: 1;
@@ -2174,9 +2177,6 @@ body {
 
 .action-idea-bg {
   border-width: 1px;
-  border-bottom-width: 8px;
-  --tw-border-opacity: 1;
-  border-bottom-color: rgb(234 179 8 / var(--tw-border-opacity));
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
   transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
@@ -2197,9 +2197,6 @@ body {
 
 .action-do-bg {
   border-width: 1px;
-  border-bottom-width: 8px;
-  --tw-border-opacity: 1;
-  border-bottom-color: rgb(249 115 22 / var(--tw-border-opacity));
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
   transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
@@ -2220,9 +2217,6 @@ body {
 
 .action-doing-bg {
   border-width: 1px;
-  border-bottom-width: 8px;
-  --tw-border-opacity: 1;
-  border-bottom-color: rgb(239 68 68 / var(--tw-border-opacity));
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
   transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
@@ -2243,9 +2237,6 @@ body {
 
 .action-review-bg {
   border-width: 1px;
-  border-bottom-width: 8px;
-  --tw-border-opacity: 1;
-  border-bottom-color: rgb(236 72 153 / var(--tw-border-opacity));
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
   transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
@@ -2266,9 +2257,6 @@ body {
 
 .action-done-bg {
   border-width: 1px;
-  border-bottom-width: 8px;
-  --tw-border-opacity: 1;
-  border-bottom-color: rgb(168 85 247 / var(--tw-border-opacity));
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
   transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
@@ -2289,9 +2277,6 @@ body {
 
 .action-accomplished-bg {
   border-width: 1px;
-  border-bottom-width: 8px;
-  --tw-border-opacity: 1;
-  border-bottom-color: rgb(99 102 241 / var(--tw-border-opacity));
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
   transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
@@ -2363,7 +2348,7 @@ body {
 
 .account-bg {
   --tw-bg-opacity: 1;
-  background-color: rgb(139 92 246 / var(--tw-bg-opacity));
+  background-color: rgb(124 58 237 / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
   transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
@@ -2375,7 +2360,7 @@ body {
 
 .account-bg:hover {
   --tw-bg-opacity: 1;
-  background-color: rgb(109 40 217 / var(--tw-bg-opacity));
+  background-color: rgb(91 33 182 / var(--tw-bg-opacity));
 }
 
 .post-bg {
@@ -2778,8 +2763,20 @@ body {
   --tw-ring-color: rgb(236 72 153 / 0.3);
 }
 
+.hover\:w-full:hover {
+  width: 100%;
+}
+
+.hover\:opacity-100:hover {
+  opacity: 1;
+}
+
 .group:hover .group-hover\:visible {
   visibility: visible;
+}
+
+.group:hover .group-hover\:h-8 {
+  height: 2rem;
 }
 
 .group:hover .group-hover\:translate-x-0 {

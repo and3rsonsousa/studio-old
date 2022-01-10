@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import request, { gql } from "graphql-request";
 import { LoaderFunction, redirect, useLoaderData } from "remix";
 import { getData, getUserId } from "~/utils/session.server";
 import dayjs from "dayjs";
@@ -6,6 +6,8 @@ import { IAccount, IAction, IBasic, ICampaign } from "~/types";
 import ActionDisplay from "~/components/Actions/Action";
 import { isLate, isNext } from "~/utils/functions";
 import { useState } from "react";
+import useUser from "~/utils/useUser";
+import useSWR from "swr";
 
 export const loader: LoaderFunction = async ({ request }) => {
 	//Retorna dos dados das Actions que estão nas Accounts que o usuário tem acesso
@@ -80,7 +82,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 			}
 		}
 	`;
-	const data = await getData(request, QUERY);
+	let data = await getData(request, QUERY);
 
 	return data;
 };
@@ -93,6 +95,24 @@ export default () => {
 		steps,
 		campaigns,
 	} = useLoaderData();
+
+	let { data, error } = useSWR(
+		gql`
+			{
+				actions {
+					id
+					name
+				}
+			}
+		`,
+		(query) =>
+			request(
+				"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master",
+				query
+			)
+	);
+
+	console.log(data, error);
 
 	//Agrupa todas as ações/Actions das contas/Accounts numa lista única
 	let actions: IAction[] = accounts.map(
@@ -219,6 +239,7 @@ export default () => {
 			<Box
 				title="Hoje"
 				actions={todayActions}
+				steps={steps}
 				selectedActions={selectedActions}
 				setSelectedActions={setSelectedActions}
 				message={"para hoje"}
@@ -226,6 +247,7 @@ export default () => {
 			<Box
 				title="Ações Atrasadas"
 				actions={lateActions}
+				steps={steps}
 				selectedActions={selectedActions}
 				setSelectedActions={setSelectedActions}
 				message={"atrasadas"}
@@ -233,6 +255,7 @@ export default () => {
 			<Box
 				title="Próximas Ações"
 				actions={nextActions}
+				steps={steps}
 				selectedActions={selectedActions}
 				setSelectedActions={setSelectedActions}
 				message={"para fazer"}
@@ -240,6 +263,7 @@ export default () => {
 			<Box
 				title="Ações Sem Data"
 				actions={undatedActions}
+				steps={steps}
 				selectedActions={selectedActions}
 				setSelectedActions={setSelectedActions}
 				message={"sem data"}
@@ -251,11 +275,13 @@ export default () => {
 const Box = ({
 	actions,
 	title,
+	steps,
 	message,
 	selectedActions,
 	setSelectedActions,
 }: {
 	actions: IAction[];
+	steps: IBasic[];
 	title: string;
 	message: string;
 	selectedActions: any;
@@ -283,6 +309,7 @@ const Box = ({
 					{actions.map((action: IAction) => (
 						<ActionDisplay
 							action={action}
+							steps={steps}
 							key={action.id}
 							selected={
 								selectedActions.filter(

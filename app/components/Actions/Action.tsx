@@ -1,4 +1,4 @@
-import { IAction } from "~/types";
+import { IAction, IBasic } from "~/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
@@ -25,11 +25,13 @@ dayjs.tz.setDefault("America/Fortaleza");
 
 export default ({
 	action,
+	steps,
 	big = true,
 	selected = false,
 	setSelectedActions,
 }: {
 	action: IAction;
+	steps: IBasic[];
 	big?: Boolean;
 	selected?: Boolean;
 	setSelectedActions: any;
@@ -47,19 +49,21 @@ export default ({
 			{(action.tag || action.flow) && (
 				<div className="flex pr-6 mb-1">
 					<div
-						className={`${action.flow?.slug}-bg badge rounded-r-none `}
+						className={`${action.flow?.slug}-bg badge min-w-[50px] rounded-r-none `}
 					>
 						{big ? action.flow?.name : ""}
 					</div>
 					<div
-						className={`${action.tag?.slug}-bg badge ${
+						className={`${action.tag?.slug}-bg badge min-w-[50px] ${
 							action.flow ? "rounded-none" : ""
 						}`}
 					>
 						{big ? action.tag?.name : ""}
 					</div>
 					<div
-						className={`${action.step?.slug}-bg badge ${
+						className={`${
+							action.step?.slug
+						}-bg badge min-w-[50px] ${
 							action.flow || action.tag ? "rounded-l-none" : ""
 						}`}
 					>
@@ -150,6 +154,33 @@ export default ({
 					<HiCheck className="text-xl text-white" />
 				</button>
 			)}
+			<div className="absolute bottom-0 left-0 w-full h-8 overflow-hidden rounded-b-lg group">
+				<div className="absolute bottom-0 left-0 flex w-full h-1 transition-all group-hover:h-8 ">
+					{steps.map((step: IBasic) => (
+						<div
+							key={step.id}
+							className={`${step.slug}-bg ${
+								step.slug === action.step?.slug
+									? " w-full "
+									: " w-8 "
+							} hover:w-full transition-all uppercase text-xxx tracking-wide font-medium overflow-hidden duration-300 text-center`}
+						>
+							<div
+								className={`w-full p-2 h-8 transition duration-500 ${
+									step.slug === action.step?.slug
+										? ""
+										: "opacity-0 hover:opacity-100"
+								}`}
+							>
+								{step.name}
+							</div>
+							{/* <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
+							{step.name}
+						</div> */}
+						</div>
+					))}
+				</div>
+			</div>
 		</div>
 	);
 };

@@ -51,31 +51,6 @@ body {
 		@apply px-2 py-0.5 font-medium tracking-wider uppercase rounded-full text-xxx text-ellipsis whitespace-nowrap overflow-hidden;
 	}
 }
-/* 
-.idea-bg {
-	@apply border border-l-8 border-l-idea-500 hover:ring-4 hover:ring-idea-500 hover:ring-opacity-30 hover:border-idea-500;
-}
-
-.do-bg {
-	@apply border border-l-8 border-l-do-500 hover:ring-4 hover:ring-do-500 hover:ring-opacity-30 hover:border-do-500;
-}
-
-.doing-bg {
-	@apply border border-l-8 border-l-doing-500 hover:ring-4 hover:ring-doing-500 hover:ring-opacity-30 hover:border-doing-500;
-}
-
-.review-bg {
-	@apply border border-l-8 border-l-review-500 hover:ring-4 hover:ring-review-500 hover:ring-opacity-30 hover:border-review-500;
-}
-
-.done-bg {
-	@apply border border-l-8 border-l-done-500 hover:ring-4 hover:ring-done-500 hover:ring-opacity-30 hover:border-done-500;
-} 
-
-.accomplished-bg {
-	@apply border border-l-8 border-l-accomplished-500 hover:ring-4 hover:ring-accomplished-500 hover:ring-opacity-30 hover:border-accomplished-500;
-}
-*/
 
 .idea-bg {
 	@apply text-white bg-idea-500 hover:bg-idea-700;
@@ -97,22 +72,22 @@ body {
 }
 
 .action-idea-bg {
-	@apply transition bg-white border border-b-8 border-b-idea-500 hover:border-idea-500 hover:ring-4 hover:ring-idea-500/30;
+	@apply transition bg-white border hover:border-idea-500 hover:ring-4 hover:ring-idea-500/30;
 }
 .action-do-bg {
-	@apply transition bg-white border border-b-8 border-b-do-500 hover:border-do-500 hover:ring-4 hover:ring-do-500/30;
+	@apply transition bg-white border hover:border-do-500 hover:ring-4 hover:ring-do-500/30;
 }
 .action-doing-bg {
-	@apply transition bg-white border border-b-8 border-b-doing-500 hover:border-doing-500 hover:ring-4 hover:ring-doing-500/30;
+	@apply transition bg-white border hover:border-doing-500 hover:ring-4 hover:ring-doing-500/30;
 }
 .action-review-bg {
-	@apply transition bg-white border border-b-8 border-b-review-500 hover:border-review-500 hover:ring-4 hover:ring-review-500/30;
+	@apply transition bg-white border hover:border-review-500 hover:ring-4 hover:ring-review-500/30;
 }
 .action-done-bg {
-	@apply transition bg-white border border-b-8 border-b-done-500 hover:border-done-500 hover:ring-4 hover:ring-done-500/30;
+	@apply transition bg-white border hover:border-done-500 hover:ring-4 hover:ring-done-500/30;
 }
 .action-accomplished-bg {
-	@apply transition bg-white border border-b-8 border-b-accomplished-500 hover:border-accomplished-500 hover:ring-4 hover:ring-accomplished-500/30;
+	@apply transition bg-white border hover:border-accomplished-500 hover:ring-4 hover:ring-accomplished-500/30;
 }
 
 .planning-bg {
@@ -125,7 +100,7 @@ body {
 	@apply text-white transition bg-creative-500 hover:bg-creative-700;
 }
 .account-bg {
-	@apply text-white transition bg-account-500 hover:bg-account-700;
+	@apply text-white transition bg-account-600 hover:bg-account-800;
 }
 
 .post-bg {
