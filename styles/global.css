@@ -46,6 +46,10 @@ body {
 	.input {
 		@apply w-full font-light border-gray-300 rounded-lg shadow-sm shadow-gray-200 focus:border-interdimensional hover:border-gray-400;
 	}
+
+	.badge {
+		@apply px-2 py-0.5 font-medium tracking-wider uppercase rounded-full text-xxx;
+	}
 }
 
 .idea-bg {
@@ -72,35 +76,48 @@ body {
 	@apply border border-l-8 border-l-accomplished-500 hover:ring-4 hover:ring-accomplished-500 hover:ring-opacity-30 hover:border-accomplished-500;
 }
 
-.post-bg {
-	@apply text-white bg-post-500 hover:bg-post-700;
-}
-.stories-bg {
-	@apply text-white bg-stories-500 hover:bg-stories-700;
-}
-.reels-bg {
-	@apply text-white bg-reels-500 hover:bg-reels-700;
-}
-.meeting-bg {
-	@apply text-white bg-meeting-500 hover:bg-meeting-700;
+.planning-bg {
+	@apply text-white transition bg-planning-400 hover:bg-planning-600;
 }
 .copy-bg {
-	@apply text-white bg-copy-500 hover:bg-copy-700;
+	@apply text-white transition bg-copy-500 hover:bg-copy-700;
+}
+.creative-bg {
+	@apply text-white transition bg-creative-500 hover:bg-creative-700;
+}
+.account-bg {
+	@apply text-white transition bg-account-500 hover:bg-account-700;
+}
+
+.post-bg {
+	@apply text-white transition bg-post-500 hover:bg-post-700;
+}
+.stories-bg {
+	@apply text-white transition bg-stories-500 hover:bg-stories-700;
+}
+.reels-bg {
+	@apply text-white transition bg-reels-500 hover:bg-reels-700;
+}
+.meeting-bg {
+	@apply text-white transition bg-meeting-500 hover:bg-meeting-700;
+}
+.copy-bg {
+	@apply text-white transition bg-copy-500 hover:bg-copy-700;
 }
 .video-bg {
-	@apply text-white bg-video-500 hover:bg-video-700;
+	@apply text-white transition bg-video-500 hover:bg-video-700;
 }
 .shooting-bg {
-	@apply text-white bg-shooting-500 hover:bg-shooting-700;
+	@apply text-white transition bg-shooting-500 hover:bg-shooting-700;
 }
 .press-bg {
-	@apply text-white bg-press-500 hover:bg-press-700;
+	@apply text-white transition bg-press-500 hover:bg-press-700;
 }
 .task-bg {
-	@apply text-white bg-task-500 hover:bg-task-700;
+	@apply text-white transition bg-task-500 hover:bg-task-700;
 }
 .tiktok-bg {
-	@apply text-white bg-tiktok-500 hover:bg-tiktok-700;
+	@apply text-white transition bg-tiktok-500 hover:bg-tiktok-700;
 }
 
 @layer utilities {

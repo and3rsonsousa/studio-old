@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	HiOutlineChevronDoubleLeft,
 	HiOutlineChevronDoubleRight,
@@ -8,11 +8,23 @@ import {
 	HiOutlineUsers,
 } from "react-icons/hi";
 import { Link } from "remix";
-import { User } from "~/types";
+import { IUser } from "~/types";
 import Avatar from "./Avatar";
 
-export default ({ user }: { user: User }) => {
+export default ({ user }: { user: IUser }) => {
 	const [compact, setCompact] = useState(true);
+	useEffect(() => {
+		if (window) {
+			setCompact(() => window.innerWidth < 768);
+			window.addEventListener("resize", () =>
+				setCompact(() => window.innerWidth < 768)
+			);
+			return () =>
+				window.removeEventListener("resize", () =>
+					setCompact(() => window.innerWidth < 768)
+				);
+		}
+	}, []);
 	return (
 		<div
 			className={`flex-shrink-0 min-h-screen prose bg-gray-50 ${

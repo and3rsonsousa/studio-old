@@ -36,6 +36,11 @@ module.exports = {
 					light: colors.yellow[100],
 				},
 			},
+			planning: colors.teal,
+			copy: colors.sky,
+			creative: colors.blue,
+			account: colors.indigo,
+
 			idea: colors.yellow,
 			do: colors.orange,
 			doing: colors.rose,

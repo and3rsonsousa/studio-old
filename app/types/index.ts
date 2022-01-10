@@ -1,40 +1,42 @@
 import { Dayjs } from "dayjs";
 
-interface User {
+interface IUser {
 	id: string;
 	name?: string;
 	username?: string;
 	image?: {
 		url: string;
 	};
-	accounts?: Account[];
+	accounts?: IAccount[];
 	role?: string;
 }
 
-interface Account {
+interface IAccount {
 	id: string;
 	name: string;
 	slug: string;
 	colors: { hex: string }[];
-	profiles?: User;
+	profiles?: IUser;
 	actions?: [];
 	image?: { url: string };
 }
 
-interface Action {
+interface IAction {
 	id: string;
 	name: string;
 	description?: string;
-	profile_responsible?: User;
+	profile_responsible?: IUser;
 	startDate?: any;
 	endDate?: any;
-	step?: Basic;
+	step?: IBasic;
+	flow?: IBasic;
+	tag?: IBasic;
 }
 
-interface Basic {
+interface IBasic {
 	id: string;
 	name: string;
 	slug?: string;
 }
 
-export type { User, Account, Action };
+export type { IUser, IAccount, IAction, IBasic };

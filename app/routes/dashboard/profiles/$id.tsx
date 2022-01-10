@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { HiOutlineCamera } from "react-icons/hi";
 import { LoaderFunction, Outlet, useLoaderData, useTransition } from "remix";
 import Avatar from "~/components/Avatar";
-import { Account, User } from "~/types";
+import { IAccount, IUser } from "~/types";
 import { getData, getUserId } from "~/utils/session.server";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -136,14 +136,14 @@ export default () => {
 							</span>
 						</label>
 						<div className="grid grid-cols-2 gap-2 mt-2">
-							{accounts.map((account: Account) => (
+							{accounts.map((account: IAccount) => (
 								<div key={account.id}>
 									<label className="flex items-center space-x-4">
 										<input
 											type="checkbox"
 											className="border-gray-300 rounded"
 											checked={selectedAccounts.find(
-												(selected: Account) =>
+												(selected: IAccount) =>
 													selected.id === account.id
 											)}
 										/>

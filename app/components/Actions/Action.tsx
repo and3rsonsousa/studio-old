@@ -1,4 +1,4 @@
-import { Action } from "~/types";
+import { IAction } from "~/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
@@ -14,7 +14,7 @@ import {
 	HiOutlineX,
 } from "react-icons/hi";
 import { BiDuplicate } from "react-icons/bi";
-import type { SetStateAction } from "react";
+
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -28,7 +28,7 @@ export default ({
 	selected = false,
 	setSelectedActions,
 }: {
-	action: Action;
+	action: IAction;
 	big?: Boolean;
 	selected?: Boolean;
 	setSelectedActions: any;
@@ -40,6 +40,24 @@ export default ({
 				big ? "p-4" : "p-2"
 			}  rounded-lg cursor-pointer ${step}-bg `}
 		>
+			{/* Tag e Flow */}
+			{(action.tag || action.flow) && (
+				<div className="flex mb-1">
+					<div
+						className={`${action.flow?.slug}-bg badge rounded-r-none`}
+					>
+						{action.flow?.name}
+					</div>
+					<div
+						className={`${action.tag?.slug}-bg badge ${
+							action.flow ? "rounded-l-none" : ""
+						}`}
+					>
+						{action.tag?.name}
+					</div>
+				</div>
+			)}
+			{/* Nome da Ação */}
 			<div
 				className={`${
 					big ? "text-lg font-medium" : "text-sm"
@@ -77,7 +95,7 @@ export default ({
 				<button className="p-1 button button-ghost">
 					<HiOutlineDotsHorizontal />
 				</button>
-				<div className="absolute top-0 right-0 flex invisible text-xl transition duration-500 translate-x-4 bg-gray-900 rounded-lg shadow-xl opacity-0 shadow-gray-400 transform-cpu group-hover:opacity-100 group-hover:visible group-hover:translate-x-0">
+				<div className="absolute top-0 right-0 flex invisible text-xl transition-all duration-300 scale-90 translate-x-4 bg-gray-900 rounded-lg shadow-xl opacity-0 shadow-gray-400 transform-cpu group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 group-hover:scale-100">
 					{/* Voltar um Passo na realização */}
 					<button className="p-1 rounded-r-none button button-invert button-ghost">
 						<HiChevronLeft />
