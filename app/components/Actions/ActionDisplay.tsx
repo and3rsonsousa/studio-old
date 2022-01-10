@@ -6,6 +6,7 @@ import timezone from "dayjs/plugin/timezone";
 import "dayjs/locale/pt-br";
 import { isLate } from "~/utils/functions";
 import {
+	HiCheck,
 	HiChevronLeft,
 	HiChevronRight,
 	HiOutlineCheckCircle,
@@ -13,6 +14,7 @@ import {
 	HiOutlineX,
 } from "react-icons/hi";
 import { BiDuplicate } from "react-icons/bi";
+import type { SetStateAction } from "react";
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -24,19 +26,19 @@ export default ({
 	action,
 	big = true,
 	selected = false,
+	setSelectedActions,
 }: {
 	action: Action;
 	big?: Boolean;
 	selected?: Boolean;
+	setSelectedActions: any;
 }) => {
 	const step = action.step?.slug;
 	return (
 		<div
 			className={`w-full relative ${
 				big ? "p-4" : "p-2"
-			}  rounded-lg cursor-pointer ${step}-bg ${
-				selected ? "bg-interdimensional/10" : ""
-			}`}
+			}  rounded-lg cursor-pointer ${step}-bg `}
 		>
 			<div
 				className={`${
@@ -75,24 +77,50 @@ export default ({
 				<button className="p-1 button button-ghost">
 					<HiOutlineDotsHorizontal />
 				</button>
-				<div className="absolute top-0 right-0 flex invisible text-xl transition translate-x-4 bg-gray-900 rounded-lg shadow-xl opacity-0 shadow-gray-400 group-hover:opacity-100 group-hover:visible transform-cpu hover:translate-x-0">
+				<div className="absolute top-0 right-0 flex invisible text-xl transition duration-500 translate-x-4 bg-gray-900 rounded-lg shadow-xl opacity-0 shadow-gray-400 transform-cpu group-hover:opacity-100 group-hover:visible group-hover:translate-x-0">
+					{/* Voltar um Passo na realização */}
 					<button className="p-1 rounded-r-none button button-invert button-ghost">
 						<HiChevronLeft />
 					</button>
+					{/* Avançar um Passo na realização */}
 					<button className="p-1 rounded-none button button-invert button-ghost">
 						<HiChevronRight />
 					</button>
-					<button className="p-1 rounded-none button button-invert button-ghost">
+					{/* Selecionar ação/Action */}
+					<button
+						className="p-1 rounded-none button button-invert button-ghost"
+						onClick={() => {
+							setSelectedActions((old: string[]) => {
+								return selected
+									? old.filter((item) => item !== action.id)
+									: [...old, action.id];
+							});
+						}}
+					>
 						<HiOutlineCheckCircle />
 					</button>
+					{/* Duplicar ação/Action */}
 					<button className="p-1 rounded-none button button-invert button-ghost">
 						<BiDuplicate />
 					</button>
+					{/* Excluir ação/Action */}
 					<button className="p-1 rounded-l-none button button-invert button-ghost">
 						<HiOutlineX />
 					</button>
 				</div>
 			</div>
+			{selected && (
+				<button
+					className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 translate-x-1/2 -translate-y-1/2 rounded-full bg-interdimensional"
+					onClick={() => {
+						setSelectedActions((old: string[]) => {
+							return old.filter((item) => item !== action.id);
+						});
+					}}
+				>
+					<HiCheck className="text-xl text-white" />
+				</button>
+			)}
 		</div>
 	);
 };

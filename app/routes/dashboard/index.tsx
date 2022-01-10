@@ -86,7 +86,7 @@ export default () => {
 		return isNext(action);
 	});
 
-	const [selectedActions, setSelectedActions] = useState([]);
+	const [selectedActions, setSelectedActions] = useState<string[]>([]);
 
 	return (
 		<div className="page prose-headings:font-medium">
@@ -139,7 +139,7 @@ const Box = ({
 		<div className="mb-8">
 			<div className="flex mb-4 space-x-4">
 				<div className="prose">
-					<h3>{title}</h3>
+					<h3 className="whitespace-nowrap ">{title}</h3>
 				</div>
 				<div className="mt-2 text-xs leading-relaxed text-gray-400 uppercase leading ">
 					Você tem {actions.length}
@@ -152,12 +152,13 @@ const Box = ({
 					{actions.map((action: Action) => (
 						<ActionDisplay
 							action={action}
+							key={action.id}
 							selected={
-								// selectedActions.filter(
-								// 	(selected: string) => selected === action.id
-								// ).length > 0
-								Math.ceil(Math.random() * 10) > 8
+								selectedActions.filter(
+									(selected: string) => selected === action.id
+								).length > 0
 							}
+							setSelectedActions={setSelectedActions}
 						/>
 					))}
 				</div>

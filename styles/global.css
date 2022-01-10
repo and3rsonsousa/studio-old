@@ -40,7 +40,7 @@ body {
 	}
 
 	.page-over {
-		@apply p-8 bg-white rounded-lg shadow-md shadow-gray-300/50;
+		@apply p-4 bg-white rounded-lg shadow-md md:p-8 shadow-gray-300/50;
 	}
 
 	.input {

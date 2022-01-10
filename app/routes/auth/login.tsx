@@ -77,7 +77,7 @@ export default () => {
 	return (
 		<div className="flex items-center justify-center min-h-screen p-8 bg-gray-50 ">
 			<div className="container max-w-xs p-8 mx-auto prose bg-white shadow-2xl shadow-gray-300 rounded-xl ">
-				<h2 className="text-interdimensional ">STUDIO</h2>
+				<img src="/logo.svg" alt="" className="w-24" />
 				<h4>Login</h4>
 				<form method="POST">
 					{actionData?.errors?.login && (

@@ -15,11 +15,11 @@ export default ({ user }: { user: User }) => {
 	const [compact, setCompact] = useState(true);
 	return (
 		<div
-			className={`flex-shrink-0 min-h-screen prose bg-gray-100 ${
-				compact ? "w-24 flex-shrink" : "w-52"
+			className={`flex-shrink-0 min-h-screen prose bg-gray-50 ${
+				compact ? "w-16 flex-shrink" : "w-52"
 			} prose-a:no-underline border-r relative`}
 		>
-			<div className="px-8 py-4 logo">
+			<div className={`${compact ? "px-4" : "px-8"} py-4`}>
 				<Link
 					to="/dashboard"
 					className={`block ${compact ? "mb-4 mt-5" : "w-24 my-4"}`}
@@ -47,7 +47,7 @@ export default ({ user }: { user: User }) => {
 					</h5>
 				</div>
 			)}
-			<div className="px-4">
+			<div className={compact ? "px-2" : "px-4"}>
 				{user.accounts?.map((account) => (
 					<Link
 						to={`/dashboard/${account.slug}`}
@@ -65,17 +65,23 @@ export default ({ user }: { user: User }) => {
 				))}
 			</div>
 
-			<div className="p-4 pt-8 mt-8">
-				<img
-					src={user.image?.url}
-					className="m-0 mx-auto rounded-full"
-				/>
-				{!compact && (
-					<h4 className="mt-4 mb-0 font-medium text-center text-interdimensional">
-						{user.name}
-					</h4>
-				)}
-				<div className={`mt-2 ${compact ? "" : "flex justify-center"}`}>
+			<div className="py-4 pt-8 mt-8">
+				<div className="px-4">
+					<img
+						src={user.image?.url}
+						className="m-0 mx-auto rounded-full"
+					/>
+					{!compact && (
+						<h4 className="mt-4 mb-0 font-medium text-center text-interdimensional">
+							{user.name}
+						</h4>
+					)}
+				</div>
+				<div
+					className={`mt-2 ${
+						compact ? "px-2" : "px-4 flex justify-center"
+					}`}
+				>
 					<Link
 						to="/profile"
 						className="items-center justify-center button button-small button-invisible whitespace-nowrap"
@@ -98,42 +104,43 @@ export default ({ user }: { user: User }) => {
 				</div>
 			</div>
 			{user.role === "Administrator" && (
-				<div className="px-4">
-					<h5 className="px-4 py-2 m-0 text-xs font-medium tracking-wider text-gray-400 uppercase">
-						ADMIN
-					</h5>
-					<div>
-						{[
-							{
-								id: 1,
-								name: "Contas",
-								slug: "accounts",
-								icon: (
-									<HiOutlineOfficeBuilding className="text-lg" />
-								),
-							},
-							{
-								id: 2,
-								name: "Usuários",
-								slug: "profiles",
-								icon: <HiOutlineUsers className="text-lg" />,
-							},
-						].map((item) => (
-							<Link
-								to={`/dashboard/${item.slug}`}
-								className={`font-light button button-invisible button-small ${
-									compact ? "justify-center" : ""
-								}`}
-								key={item.id}
-							>
-								{item.icon}
-								{!compact && <span>{item.name}</span>}
-							</Link>
-						))}
-					</div>
+				<div className={compact ? "px-2" : "px-4"}>
+					{!compact && (
+						<h5 className="px-4 py-2 m-0 text-xs font-medium tracking-wider text-gray-400 uppercase">
+							ADMIN
+						</h5>
+					)}
+
+					{[
+						{
+							id: 1,
+							name: "Contas",
+							slug: "accounts",
+							icon: (
+								<HiOutlineOfficeBuilding className="text-lg" />
+							),
+						},
+						{
+							id: 2,
+							name: "Usuários",
+							slug: "profiles",
+							icon: <HiOutlineUsers className="text-lg" />,
+						},
+					].map((item) => (
+						<Link
+							to={`/dashboard/${item.slug}`}
+							className={`font-light button button-invisible button-small ${
+								compact ? "justify-center" : ""
+							}`}
+							key={item.id}
+						>
+							{item.icon}
+							{!compact && <span>{item.name}</span>}
+						</Link>
+					))}
 				</div>
 			)}
-			<div className="absolute right-0 z-10 translate-x-1/2 top-6">
+			<div className={`absolute right-0 z-10 translate-x-1/2 top-12`}>
 				<button className="justify-center w-10 h-10 p-0 border rounded-full button">
 					{compact ? (
 						<HiOutlineChevronDoubleRight
