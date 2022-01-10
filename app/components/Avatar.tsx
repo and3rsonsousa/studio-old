@@ -1,4 +1,4 @@
-import { Account } from "~/types";
+import { IAccount } from "~/types";
 
 export default function Avatar({
 	avatar,
@@ -8,7 +8,7 @@ export default function Avatar({
 	border = false,
 	_className,
 }: {
-	avatar: Account;
+	avatar: IAccount;
 	small?: Boolean;
 	medium?: Boolean;
 	smallest?: Boolean;

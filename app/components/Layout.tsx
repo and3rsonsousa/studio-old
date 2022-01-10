@@ -1,13 +1,11 @@
-import { HiOutlineLogout } from "react-icons/hi";
-import { Link } from "remix";
-import type { User } from "~/types";
+import type { IUser } from "~/types";
 import SideBar from "./SideBar";
 
 export default ({
 	user,
 	children,
 }: {
-	user: User;
+	user: IUser;
 	children: React.ReactNode;
 }) => {
 	return (

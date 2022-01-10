@@ -51,7 +51,7 @@ body {
 		@apply px-2 py-0.5 font-medium tracking-wider uppercase rounded-full text-xxx;
 	}
 }
-
+/* 
 .idea-bg {
 	@apply border border-l-8 border-l-idea-500 hover:ring-4 hover:ring-idea-500 hover:ring-opacity-30 hover:border-idea-500;
 }
@@ -70,14 +70,53 @@ body {
 
 .done-bg {
 	@apply border border-l-8 border-l-done-500 hover:ring-4 hover:ring-done-500 hover:ring-opacity-30 hover:border-done-500;
-}
+} 
 
 .accomplished-bg {
 	@apply border border-l-8 border-l-accomplished-500 hover:ring-4 hover:ring-accomplished-500 hover:ring-opacity-30 hover:border-accomplished-500;
 }
+*/
+
+.idea-bg {
+	@apply text-white bg-idea-500 hover:bg-idea-700;
+}
+.do-bg {
+	@apply text-white bg-do-500 hover:bg-do-700;
+}
+.doing-bg {
+	@apply text-white bg-doing-500 hover:bg-doing-700;
+}
+.review-bg {
+	@apply text-white bg-review-500 hover:bg-review-700;
+}
+.done-bg {
+	@apply text-white bg-done-500 hover:bg-done-700;
+}
+.accomplished-bg {
+	@apply text-white bg-accomplished-500 hover:bg-accomplished-700;
+}
+
+.action-idea-bg {
+	@apply transition bg-white border border-l-8 border-l-idea-500 hover:border-idea-500 hover:ring-4 hover:ring-idea-500/30;
+}
+.action-do-bg {
+	@apply transition bg-white border border-l-8 border-l-do-500 hover:border-do-500 hover:ring-4 hover:ring-do-500/30;
+}
+.action-doing-bg {
+	@apply transition bg-white border border-l-8 border-l-doing-500 hover:border-doing-500 hover:ring-4 hover:ring-doing-500/30;
+}
+.action-review-bg {
+	@apply transition bg-white border border-l-8 border-l-review-500 hover:border-review-500 hover:ring-4 hover:ring-review-500/30;
+}
+.action-done-bg {
+	@apply transition bg-white border border-l-8 border-l-done-500 hover:border-done-500 hover:ring-4 hover:ring-done-500/30;
+}
+.action-accomplished-bg {
+	@apply transition bg-white border border-l-8 border-l-accomplished-500 hover:border-accomplished-500 hover:ring-4 hover:ring-accomplished-500/30;
+}
 
 .planning-bg {
-	@apply text-white transition bg-planning-400 hover:bg-planning-600;
+	@apply text-white transition bg-planning-500 hover:bg-planning-600;
 }
 .copy-bg {
 	@apply text-white transition bg-copy-500 hover:bg-copy-700;
@@ -118,6 +157,37 @@ body {
 }
 .tiktok-bg {
 	@apply text-white transition bg-tiktok-500 hover:bg-tiktok-700;
+}
+
+.action-post-bg {
+	@apply transition bg-white border border-l-8 border-l-post-500 hover:border-post-500 hover:ring-4 hover:ring-post-500/30;
+}
+.action-stories-bg {
+	@apply transition bg-white border border-l-8 border-l-stories-500 hover:border-stories-500 hover:ring-4 hover:ring-stories-500/30;
+}
+.action-reels-bg {
+	@apply transition bg-white border border-l-8 border-l-reels-500 hover:border-reels-500 hover:ring-4 hover:ring-reels-500/30;
+}
+.action-meeting-bg {
+	@apply transition bg-white border border-l-8 border-l-meeting-500 hover:border-meeting-500 hover:ring-4 hover:ring-meeting-500/30;
+}
+.action-copy-bg {
+	@apply transition bg-white border border-l-8 border-l-copy-500 hover:border-copy-500 hover:ring-4 hover:ring-copy-500/30;
+}
+.action-video-bg {
+	@apply transition bg-white border border-l-8 border-l-video-500 hover:border-video-500 hover:ring-4 hover:ring-video-500/30;
+}
+.action-shooting-bg {
+	@apply transition bg-white border border-l-8 border-l-shooting-500 hover:border-shooting-500 hover:ring-4 hover:ring-shooting-500/30;
+}
+.action-press-bg {
+	@apply transition bg-white border border-l-8 border-l-press-500 hover:border-press-500 hover:ring-4 hover:ring-press-500/30;
+}
+.action-task-bg {
+	@apply transition bg-white border border-l-8 border-l-task-500 hover:border-task-500 hover:ring-4 hover:ring-task-500/30;
+}
+.action-tiktok-bg {
+	@apply transition bg-white border border-l-8 border-l-tiktok-500 hover:border-tiktok-500 hover:ring-4 hover:ring-tiktok-500/30;
 }
 
 @layer utilities {

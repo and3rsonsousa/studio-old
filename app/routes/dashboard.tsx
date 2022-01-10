@@ -2,7 +2,6 @@ import { requireUserId, getData } from "~/utils/session.server";
 import { Outlet, redirect, useLoaderData } from "remix";
 import type { LoaderFunction } from "remix";
 import Layout from "~/components/Layout";
-import { User } from "~/types";
 import { gql } from "graphql-request";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -25,6 +24,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 				}
 			}
 		}
+		
 		}`;
 	const { profile } = await getData(request, QUERY);
 	if (profile.accounts && profile.accounts.length === 1)

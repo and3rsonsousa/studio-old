@@ -2,7 +2,7 @@ import { gql } from "graphql-request";
 import { LoaderFunction, redirect, useLoaderData } from "remix";
 import { getData, getUserId } from "~/utils/session.server";
 import dayjs from "dayjs";
-import { IAccount, IAction } from "~/types";
+import { IAccount, IAction, IBasic, ICampaign } from "~/types";
 import ActionDisplay from "~/components/Actions/Action";
 import { isLate, isNext } from "~/utils/functions";
 import { useState } from "react";
@@ -13,14 +13,31 @@ export const loader: LoaderFunction = async ({ request }) => {
 	const userId = await getUserId(request);
 	const QUERY = gql`
 		{
+			campaigns{
+				id
+				name
+				slug
+				start
+				end
+				account{
+					id
+					name
+					colors{
+						hex
+					}
+				}
+				actions{
+					id
+				}
+			}
 			profile(where: {id: "${userId}"}) {
 				accounts{
 					actions {
 						id
 						name
 						description
-						startDate
-						endDate
+						start
+						end
 						step{
 							id
 							name
@@ -39,6 +56,21 @@ export const loader: LoaderFunction = async ({ request }) => {
 					}
 				}
 			}
+			tags{
+				id
+				name
+				slug
+			}
+			steps{
+				id
+				name
+				slug
+			}
+			flows{
+				id
+				name
+				slug
+			}
 		}
 	`;
 	const data = await getData(request, QUERY);
@@ -49,6 +81,10 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default () => {
 	let {
 		profile: { accounts },
+		tags,
+		flows,
+		steps,
+		campaigns,
 	} = useLoaderData();
 
 	//Agrupa todas as ações/Actions das contas/Accounts numa lista única
@@ -57,18 +93,18 @@ export default () => {
 	);
 	//Todas as ações em um único nível
 	actions = actions.flat();
-	//Define os campos de data/startDate-endDate como sendo dayjs
+	//Define os campos de data/start-end como sendo dayjs
 	//em seguida insere em arrays separadas para com e sem data
 	let datedActions: IAction[] = [];
 	let undatedActions: IAction[] = [];
 	actions = actions.map((action: IAction) => {
 		let newAction = {
 			...action,
-			startDate: action.startDate ? dayjs(action.startDate) : null,
-			endDate: action.endDate ? dayjs(action.endDate) : null,
+			start: action.start ? dayjs(action.start) : null,
+			end: action.end ? dayjs(action.end) : null,
 		};
 		//Insere na array de ações/Actions com data
-		if (newAction.startDate) {
+		if (newAction.start) {
 			datedActions.push(newAction);
 		} else {
 			//Caso contrário insere na array de ações/Actions sem data
@@ -78,15 +114,14 @@ export default () => {
 	});
 	//ordena a array por datas crescentes
 	datedActions = datedActions.sort((a: IAction, b: IAction) =>
-		a.startDate.diff(b.startDate)
+		a.start.diff(b.start)
 	);
 	const todayActions = datedActions.filter((action: IAction) => {
 		return (
-			((action.startDate || action.endDate) &&
+			((action.start || action.end) &&
 				dayjs().format("YYYY-MM-DD") ===
-					action.startDate?.format("YYYY-MM-DD")) ||
-			dayjs().format("YYYY-MM-DD") ===
-				action.endDate?.format("YYYY-MM-DD")
+					action.start?.format("YYYY-MM-DD")) ||
+			dayjs().format("YYYY-MM-DD") === action.end?.format("YYYY-MM-DD")
 		);
 	});
 
@@ -101,7 +136,79 @@ export default () => {
 	const [selectedActions, setSelectedActions] = useState<string[]>([]);
 
 	return (
-		<div className="page prose-headings:font-medium">
+		<div className="h-screen overflow-x-hidden overflow-y-auto page prose-headings:font-medium snap-y snap-mandatory scroll-smooth">
+			<div className="flex items-center justify-between mb-4 space-x-4 snap-start">
+				<div className="prose">
+					<h2 className="my-4 whitespace-nowrap">Campanhas</h2>
+				</div>
+
+				<div>
+					<button className="button button-small button-ghost">
+						Ver todos
+					</button>
+				</div>
+			</div>
+			<div className="p-0 page-over">
+				<div className="flex w-full overflow-x-auto divide-x scroll-smooth snap-x snap-mandatory">
+					{campaigns.map((campaign: ICampaign) => (
+						<div key={campaign.id} className="shrink-0 snap-start">
+							<div className="p-8 shrink-0 w-52 md:w-80">
+								<div className="text-lg font-medium leading-tight">
+									{campaign.name}
+								</div>
+								<div className="font-medium tracking-wide text-gray-400 uppercase text-xx">
+									{dayjs(campaign.start).format(
+										"[De] D [de] MMMM"
+									)}
+									{dayjs(campaign.end).format(
+										" [a] D [de] MMMM"
+									)}
+								</div>
+								<div className="mt-2 text-sm text-gray-600">
+									{campaign.actions.length > 0
+										? `${campaign.actions.length} Ações`
+										: "Nenhuma ação cadastrada até o momento."}
+								</div>
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
+
+			{/* <div className="py-8">
+
+				<div className="flex flex-wrap gap-2 mb-16">
+					{flows.map((item: IBasic) => (
+						<div className={`${item.slug}-bg badge`} key={item.id}>
+							{item.name}
+						</div>
+					))}
+				</div>
+				<div className="flex flex-wrap gap-2 mb-16">
+					{steps.map((item: IBasic) => (
+						<div className={`${item.slug}-bg badge`} key={item.id}>
+							{item.name}
+						</div>
+					))}
+				</div>
+				<div className="flex flex-wrap gap-2 mb-16">
+					{tags.map((item: IBasic) => (
+						<div className={`${item.slug}-bg badge`} key={item.id}>
+							{item.name}
+						</div>
+					))}
+				</div>
+				<div className="flex flex-wrap gap-2 mb-16">
+					{tags.map((item: IBasic) => (
+						<div
+							className={`action-${item.slug}-bg badge`}
+							key={item.id}
+						>
+							{item.name}
+						</div>
+					))}
+				</div>
+			</div> */}
 			<Box
 				title="Hoje"
 				actions={todayActions}
@@ -110,21 +217,21 @@ export default () => {
 				message={"para hoje"}
 			/>
 			<Box
-				title="Atrasadas"
+				title="Ações Atrasadas"
 				actions={lateActions}
 				selectedActions={selectedActions}
 				setSelectedActions={setSelectedActions}
 				message={"atrasadas"}
 			/>
 			<Box
-				title="Próximas"
+				title="Próximas Ações"
 				actions={nextActions}
 				selectedActions={selectedActions}
 				setSelectedActions={setSelectedActions}
 				message={"para fazer"}
 			/>
 			<Box
-				title="Sem data"
+				title="Ações Sem Data"
 				actions={undatedActions}
 				selectedActions={selectedActions}
 				setSelectedActions={setSelectedActions}
@@ -148,7 +255,7 @@ const Box = ({
 	setSelectedActions: any;
 }) => {
 	return actions.length > 0 ? (
-		<div className="mb-8">
+		<div className="mb-8 snap-start">
 			<div className="flex items-center justify-between mb-4 space-x-4">
 				<div className="prose">
 					<h3 className="whitespace-nowrap ">{title}</h3>
