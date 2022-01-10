@@ -26,6 +26,7 @@ interface IAction {
 	name: string;
 	description?: string;
 	profile_responsible?: IUser;
+	account: IAccount;
 	start?: any;
 	end?: any;
 	step?: IBasic;

@@ -38,6 +38,13 @@ export const loader: LoaderFunction = async ({ request }) => {
 						description
 						start
 						end
+						account{
+							id
+							name
+							colors{
+								hex
+							}
+						}
 						step{
 							id
 							name
@@ -137,9 +144,9 @@ export default () => {
 
 	return (
 		<div className="h-screen overflow-x-hidden overflow-y-auto page prose-headings:font-medium snap-y snap-mandatory scroll-smooth">
-			<div className="flex items-center justify-between mb-4 space-x-4 snap-start">
+			<div className="flex items-center justify-between pt-4 mb-4 space-x-4 snap-start">
 				<div className="prose">
-					<h2 className="my-4 whitespace-nowrap">Campanhas</h2>
+					<h2 className=" whitespace-nowrap">Campanhas</h2>
 				</div>
 
 				<div>

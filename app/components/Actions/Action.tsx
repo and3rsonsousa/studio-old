@@ -14,6 +14,7 @@ import {
 	HiOutlineX,
 } from "react-icons/hi";
 import { BiDuplicate } from "react-icons/bi";
+import Avatar from "../Avatar";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -33,27 +34,36 @@ export default ({
 	selected?: Boolean;
 	setSelectedActions: any;
 }) => {
-	const step = action.step?.slug;
 	return (
 		<div
-			className={`w-full relative ${
-				big ? "p-4" : "p-2"
-			}  rounded-lg cursor-pointer action-${action.tag?.slug}-bg `}
+			className={`action-${action.step?.slug}-bg relative rounded-lg ${
+				big ? "p-4" : "p-2 pl-4 "
+			}  cursor-pointer`}
 		>
+			<div className="absolute top-4 -left-3">
+				<Avatar avatar={action.account} small={true} />
+			</div>
 			{/* Tag e Flow */}
 			{(action.tag || action.flow) && (
-				<div className="flex mb-1">
+				<div className="flex pr-6 mb-1">
 					<div
-						className={`${action.flow?.slug}-bg badge rounded-r-none`}
+						className={`${action.flow?.slug}-bg badge rounded-r-none `}
 					>
-						{action.flow?.name}
+						{big ? action.flow?.name : ""}
+					</div>
+					<div
+						className={`${action.tag?.slug}-bg badge ${
+							action.flow ? "rounded-none" : ""
+						}`}
+					>
+						{big ? action.tag?.name : ""}
 					</div>
 					<div
 						className={`${action.step?.slug}-bg badge ${
-							action.flow ? "rounded-l-none" : ""
+							action.flow || action.tag ? "rounded-l-none" : ""
 						}`}
 					>
-						{action.step?.name}
+						{big ? action.step?.name : ""}
 					</div>
 				</div>
 			)}
@@ -61,16 +71,17 @@ export default ({
 			<div
 				className={`${
 					big ? "text-lg font-medium" : "text-sm"
-				} leading-tight  pr-4`}
+				} leading-tight  pr-6`}
 			>
 				{action.name}
 			</div>
+
 			{big && action.description && (
 				<div className={`text-sm mt-2 line-clamp-3 text-gray-600`}>
 					{action.description}
 				</div>
 			)}
-			{action.start ? (
+			{big && action.start ? (
 				<div className={`${big ? "mt-2" : "mt-1"}`}>
 					<div className="text-sm text-gray-600">
 						{action.start.format("D [de] MMMM[, às] H[h]mm")}
