@@ -148,7 +148,7 @@ export default () => {
 					</button>
 				</div>
 			</div>
-			<div className="p-0 page-over">
+			<div className="p-0 mb-8 page-over">
 				<div className="flex w-full overflow-x-auto divide-x scroll-smooth snap-x snap-mandatory">
 					{campaigns.map((campaign: ICampaign) => (
 						<div key={campaign.id} className="shrink-0 snap-start">

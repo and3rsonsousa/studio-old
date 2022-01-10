@@ -2836,6 +2836,12 @@ body {
           text-decoration-line: none;
 }
 
+@media (min-width: 640px) {
+  .sm\:block {
+    display: block;
+  }
+}
+
 @media (min-width: 768px) {
   .md\:block {
     display: block;

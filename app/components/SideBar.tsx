@@ -152,7 +152,10 @@ export default ({ user }: { user: IUser }) => {
 					))}
 				</div>
 			)}
-			<div className={`absolute right-0 z-10 translate-x-1/2 top-12`}>
+
+			<div
+				className={`absolute hidden sm:block right-0 z-10 translate-x-1/2 top-12`}
+			>
 				<button className="justify-center w-10 h-10 p-0 border rounded-full button">
 					{compact ? (
 						<HiOutlineChevronDoubleRight
