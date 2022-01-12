@@ -696,9 +696,9 @@ const Header = ({
 										</div>
 									)}
 								</form>
-								<pre>
+								{/* <pre>
 									{JSON.stringify(action, undefined, 2)}
-								</pre>
+								</pre> */}
 							</div>
 							<div className="grid grid-cols-2">
 								{!fullPopup ? (
