@@ -1419,6 +1419,10 @@ select {
   z-index: 50;
 }
 
+.col-span-2 {
+  grid-column: span 2 / span 2;
+}
+
 .m-0 {
   margin: 0px;
 }
@@ -2333,6 +2337,10 @@ select {
 .text-xxx {
   font-size: 0.5rem;
   line: 0.5rem;
+}
+
+.\[-03\:00\] {
+  -03: 00;
 }
 
 body {

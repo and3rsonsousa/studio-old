@@ -81,7 +81,13 @@ const Header = ({
 		step: steps[0].id,
 		tag: tags[0].id,
 		image: "",
-		start: start ? start : dayjs().format("YYYY-MM-DD[T]HH:mm:ss[+00:00]"),
+		start: start
+			? start
+			: dayjs()
+					.set("h", 11)
+					.set("m", 12)
+					.set("s", Math.ceil(Math.random() * 50))
+					.format("YYYY-MM-DD[T]HH:mm:ss[-03:00]"),
 		end: "",
 		campaign: "",
 	});
@@ -536,7 +542,7 @@ const Header = ({
 										</motion.div>
 									</div>
 
-									<div className="mt-4">
+									{/* <div className="mt-4">
 										<motion.label
 											layout="position"
 											transition={item.transition}
@@ -545,41 +551,154 @@ const Header = ({
 										>
 											Image
 										</motion.label>
+									</div> */}
+
+									<div
+										className={`${
+											fullPopup ? "lg:grid" : ""
+										} grid-cols-3 gap-4`}
+									>
+										<div className="col-span-2 mt-4">
+											<motion.label
+												layout="position"
+												transition={item.transition}
+												htmlFor="start"
+												className="label"
+											>
+												Data
+											</motion.label>
+											<div
+												className={`${
+													fullPopup ? "lg:grid" : ""
+												} grid-cols-2 gap-4`}
+											>
+												<input
+													type="date"
+													name="start"
+													id="start"
+													className="input"
+													value={dayjs(
+														action.start
+													).format("YYYY-MM-DD")}
+													onChange={(event) => {
+														setAction(() => ({
+															...action,
+															start:
+																dayjs(
+																	event.target
+																		.value
+																).format(
+																	"YYYY-MM-DD"
+																) +
+																"T" +
+																dayjs(
+																	action.start
+																).format(
+																	"HH:mm:ss"
+																) +
+																"-03:00",
+														}));
+													}}
+												/>
+												<input
+													name="time"
+													type="time"
+													className={`${
+														fullPopup ? "" : "mt-2"
+													} input`}
+													value={dayjs(
+														action.start
+													).format("HH:mm:ss")}
+													onChange={(event) => {
+														console.log(
+															event.target.value
+														);
+
+														setAction(() => ({
+															...action,
+															start:
+																dayjs(
+																	action.start
+																).format(
+																	"YYYY-MM-DD"
+																) +
+																"T" +
+																event.target
+																	.value +
+																"-03:00",
+														}));
+													}}
+												/>
+											</div>
+										</div>
+										{fullPopup && (
+											<div className="mt-4">
+												<label
+													htmlFor="end"
+													className="label"
+												>
+													Encerramento
+												</label>
+												<input
+													name="end"
+													id="end"
+													type="date"
+													className={`${
+														fullPopup ? "" : "mt-2"
+													} input`}
+													value={dayjs(
+														action.end
+													).format("YYYY-MM-DD")}
+													onChange={(event) => {
+														setAction(() => ({
+															...action,
+															end: dayjs(
+																event.target
+																	.value
+															).format(
+																"YYYY-MM-DD"
+															),
+														}));
+													}}
+												/>
+											</div>
+										)}
 									</div>
-									<div className="mt-4">
-										<motion.label
-											layout="position"
-											transition={item.transition}
-											htmlFor="name"
-											className="label"
-										>
-											Start
-										</motion.label>
-									</div>
-									<div className="mt-4">
-										<motion.label
-											layout="position"
-											transition={item.transition}
-											htmlFor="name"
-											className="label"
-										>
-											End
-										</motion.label>
-									</div>
-									<div className="mt-4">
-										<motion.label
-											layout="position"
-											transition={item.transition}
-											htmlFor="name"
-											className="label"
-										>
-											Campaign
-										</motion.label>
-									</div>
+
+									{fullPopup && (
+										<div className="mt-4">
+											<label
+												htmlFor="campaign"
+												className="label"
+											>
+												Campanha
+											</label>
+											<select
+												id="campaign"
+												name="campaign"
+												className={`input`}
+												onChange={(event) =>
+													setAction(() => ({
+														...action,
+														campaign:
+															event.target.value,
+													}))
+												}
+												value={action.campaign}
+											>
+												<option value=""></option>
+												{campaigns.map((campaign) => (
+													<option value={campaign.id}>
+														{campaign.name}
+													</option>
+												))}
+											</select>
+										</div>
+									)}
 								</form>
-								{/* <pre>
+								<pre>
 									{JSON.stringify(action, undefined, 2)}
-								</pre> */}
+								</pre>
 							</div>
 							<div className="grid grid-cols-2">
 								{!fullPopup ? (
