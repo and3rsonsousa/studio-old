@@ -1,5 +1,3 @@
-import { Dayjs } from "dayjs";
-
 interface IUser {
 	id: string;
 	name?: string;

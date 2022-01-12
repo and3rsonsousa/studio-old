@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { IAccount } from "~/types";
 
 export default function Avatar({
@@ -16,7 +17,11 @@ export default function Avatar({
 	_className?: string;
 }) {
 	return avatar ? (
-		<div className={_className ? _className : undefined}>
+		<motion.div
+			layout
+			transition={{ ease: "easeOut" }}
+			className={_className ? _className : undefined}
+		>
 			<div
 				className={` ${
 					smallest
@@ -25,7 +30,7 @@ export default function Avatar({
 						? "w-6 h-6 text-xs"
 						: medium
 						? "w-9 h-9 text-sm"
-						: "w-14 h-14 text-base"
+						: "w-6 h-6 lg:w-14 text-xx lg:h-14 lg:text-base"
 				} rounded-full overflow-hidden font-bold bg-neutral-2 text-neutral-4 flex justify-center items-center${
 					border ? " ring-2 ring-white" : ""
 				}`}
@@ -49,12 +54,20 @@ export default function Avatar({
 								: undefined
 						}
 					>
-						{avatar.name
-							? avatar.name.substr(0, smallest || small ? 1 : 3)
-							: "P"}
+						<span className="lg:hidden">
+							{avatar.name ? avatar.name.substring(0, 1) : "A"}
+						</span>
+						<span className="hidden lg:block">
+							{avatar.name
+								? avatar.name.substring(
+										0,
+										smallest || small ? 1 : 3
+								  )
+								: "A"}
+						</span>
 					</span>
 				)}
 			</div>
-		</div>
+		</motion.div>
 	) : null;
 }

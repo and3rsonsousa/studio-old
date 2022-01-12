@@ -42,9 +42,6 @@ export default ({
 				big ? "p-4" : "p-2 pl-4 "
 			}  cursor-pointer`}
 		>
-			<div className="absolute top-4 -left-3">
-				<Avatar avatar={action.account} small={true} />
-			</div>
 			{/* Tag e Flow */}
 			{(action.tag || action.flow) && (
 				<div className="flex pr-6 mb-1">
@@ -180,6 +177,9 @@ export default ({
 						</div>
 					))}
 				</div>
+			</div>
+			<div className="absolute top-4 -left-3">
+				<Avatar avatar={action.account} small={true} />
 			</div>
 		</div>
 	);

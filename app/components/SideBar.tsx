@@ -27,7 +27,7 @@ export default ({ user }: { user: IUser }) => {
 	}, []);
 	return (
 		<div
-			className={`flex-shrink-0 min-h-screen prose bg-gray-50 ${
+			className={`flex-shrink-0 h-screen prose overflow-y-auto overflow-x-hidden bg-gray-50 ${
 				compact ? "w-16 flex-shrink" : "w-52"
 			} prose-a:no-underline border-r relative`}
 		>
@@ -39,7 +39,7 @@ export default ({ user }: { user: IUser }) => {
 					{compact ? (
 						<img
 							src="/logo-small.svg"
-							alt="STUDIO"
+							alt="STUDIO by canivete"
 							className="m-0"
 						/>
 					) : (
@@ -154,9 +154,11 @@ export default ({ user }: { user: IUser }) => {
 			)}
 
 			<div
-				className={`absolute hidden sm:block right-0 z-10 translate-x-1/2 top-12`}
+				className={`absolute hidden sm:block right-0 z-10 ${
+					compact ? "top-0" : "top-6"
+				}`}
 			>
-				<button className="justify-center w-10 h-10 p-0 border rounded-full button">
+				<button className="justify-center w-10 h-10 p-0 rounded-l-full button button-ghost">
 					{compact ? (
 						<HiOutlineChevronDoubleRight
 							onClick={(event) => {

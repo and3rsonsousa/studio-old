@@ -1,13 +1,15 @@
 import request, { gql } from "graphql-request";
-import { LoaderFunction, redirect, useLoaderData } from "remix";
+import { LoaderFunction, Outlet, redirect, useLoaderData } from "remix";
 import { getData, getUserId } from "~/utils/session.server";
 import dayjs from "dayjs";
 import { IAccount, IAction, IBasic, ICampaign } from "~/types";
 import ActionDisplay from "~/components/Actions/Action";
 import { isLate, isNext } from "~/utils/functions";
 import { useState } from "react";
-import useUser from "~/utils/useUser";
-import useSWR from "swr";
+
+import { HiOutlineCalendar, HiOutlineViewList } from "react-icons/hi";
+import { CgBoard } from "react-icons/cg";
+import Header from "~/components/Header";
 
 export const loader: LoaderFunction = async ({ request }) => {
 	//Retorna dos dados das Actions que estão nas Accounts que o usuário tem acesso
@@ -32,7 +34,20 @@ export const loader: LoaderFunction = async ({ request }) => {
 					id
 				}
 			}
+			header_profile:profile(where: {id: "${userId}"}) {
+				id
+				name
+				role
+			}
 			profile(where: {id: "${userId}"}) {
+				header_accounts:accounts(orderBy: name_ASC){
+					id
+					name
+					slug
+					colors{
+						hex
+					}
+				}
 				accounts{
 					actions {
 						id
@@ -65,6 +80,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 					}
 				}
 			}
+			profiles{
+				id
+				name
+				role
+			}
+		
 			tags{
 				id
 				name
@@ -89,30 +110,36 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default () => {
 	let {
-		profile: { accounts },
+		profile: { accounts, header_accounts },
 		tags,
 		flows,
 		steps,
 		campaigns,
+		profiles,
+		header_profile,
 	} = useLoaderData();
 
-	let { data, error } = useSWR(
-		gql`
-			{
-				actions {
-					id
-					name
-				}
-			}
-		`,
-		(query) =>
-			request(
-				"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master",
-				query
-			)
-	);
+	// useSWR later
 
-	console.log(data, error);
+	// let { data, error, isValidating } = useSWR(
+	// 	gql`
+	// 		{
+	// 			actions {
+	// 				id
+	// 				name
+	// 			}
+	// 		}
+	// 	`,
+	// 	(query) =>
+	// 		request(
+	// 			"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master",
+	// 			query
+	// 		)
+	// );
+
+	// useEffect(() => {
+	// 	console.log("Validating");
+	// }, [isValidating]);
 
 	//Agrupa todas as ações/Actions das contas/Accounts numa lista única
 	let actions: IAction[] = accounts.map(
@@ -163,46 +190,59 @@ export default () => {
 	const [selectedActions, setSelectedActions] = useState<string[]>([]);
 
 	return (
-		<div className="h-screen overflow-x-hidden overflow-y-auto page prose-headings:font-medium snap-y snap-mandatory scroll-smooth">
-			<div className="flex items-center justify-between pt-4 mb-4 space-x-4 snap-start">
-				<div className="prose">
-					<h2 className=" whitespace-nowrap">Campanhas</h2>
-				</div>
+		<div className="h-screen overflow-x-hidden overflow-y-auto page prose-headings:font-medium">
+			<Header
+				profile={header_profile}
+				profiles={profiles}
+				accounts={header_accounts}
+				steps={steps}
+				tags={tags}
+				flows={flows}
+				campaigns={campaigns}
+			/>
+			<div>
+				<div className="flex items-center justify-between pt-4 mb-4 space-x-4 snap-start">
+					<div className="prose">
+						<h2 className=" whitespace-nowrap">Campanhas</h2>
+					</div>
 
-				<div>
-					<button className="button button-small button-ghost">
-						Ver todos
-					</button>
+					<div>
+						<button className="button button-small button-ghost">
+							Ver todos
+						</button>
+					</div>
 				</div>
-			</div>
-			<div className="p-0 mb-8 page-over">
-				<div className="flex w-full overflow-x-auto divide-x scroll-smooth snap-x snap-mandatory">
-					{campaigns.map((campaign: ICampaign) => (
-						<div key={campaign.id} className="shrink-0 snap-start">
-							<div className="p-8 shrink-0 w-52 md:w-80">
-								<div className="text-lg font-medium leading-tight">
-									{campaign.name}
-								</div>
-								<div className="font-medium tracking-wide text-gray-400 uppercase text-xx">
-									{dayjs(campaign.start).format(
-										"[De] D [de] MMMM"
-									)}
-									{dayjs(campaign.end).format(
-										" [a] D [de] MMMM"
-									)}
-								</div>
-								<div className="mt-2 text-sm text-gray-600">
-									{campaign.actions.length > 0
-										? `${campaign.actions.length} Ações`
-										: "Nenhuma ação cadastrada até o momento."}
+				<div className="p-0 mb-8 page-over">
+					<div className="flex w-full overflow-x-auto divide-x scroll-smooth snap-x snap-mandatory">
+						{campaigns.map((campaign: ICampaign) => (
+							<div
+								key={campaign.id}
+								className="shrink-0 snap-start"
+							>
+								<div className="p-8 shrink-0 w-52 md:w-80">
+									<div className="text-lg font-medium leading-tight">
+										{campaign.name}
+									</div>
+									<div className="font-medium tracking-wide text-gray-400 uppercase text-xx">
+										{dayjs(campaign.start).format(
+											"[De] D [de] MMMM"
+										)}
+										{dayjs(campaign.end).format(
+											" [a] D [de] MMMM"
+										)}
+									</div>
+									<div className="mt-2 text-sm text-gray-600">
+										{campaign.actions.length > 0
+											? `${campaign.actions.length} Ações`
+											: "Nenhuma ação cadastrada até o momento."}
+									</div>
 								</div>
 							</div>
-						</div>
-					))}
+						))}
+					</div>
 				</div>
-			</div>
 
-			{/* <div className="py-8">
+				{/* <div className="py-8">
 
 				<div className="flex flex-wrap gap-2 mb-16">
 					{flows.map((item: IBasic) => (
@@ -236,38 +276,40 @@ export default () => {
 					))}
 				</div>
 			</div> */}
-			<Box
-				title="Hoje"
-				actions={todayActions}
-				steps={steps}
-				selectedActions={selectedActions}
-				setSelectedActions={setSelectedActions}
-				message={"para hoje"}
-			/>
-			<Box
-				title="Ações Atrasadas"
-				actions={lateActions}
-				steps={steps}
-				selectedActions={selectedActions}
-				setSelectedActions={setSelectedActions}
-				message={"atrasadas"}
-			/>
-			<Box
-				title="Próximas Ações"
-				actions={nextActions}
-				steps={steps}
-				selectedActions={selectedActions}
-				setSelectedActions={setSelectedActions}
-				message={"para fazer"}
-			/>
-			<Box
-				title="Ações Sem Data"
-				actions={undatedActions}
-				steps={steps}
-				selectedActions={selectedActions}
-				setSelectedActions={setSelectedActions}
-				message={"sem data"}
-			/>
+				<Box
+					title="Hoje"
+					actions={todayActions}
+					steps={steps}
+					selectedActions={selectedActions}
+					setSelectedActions={setSelectedActions}
+					message={"para hoje"}
+				/>
+				<Box
+					title="Ações Atrasadas"
+					actions={lateActions}
+					steps={steps}
+					selectedActions={selectedActions}
+					setSelectedActions={setSelectedActions}
+					message={"atrasadas"}
+				/>
+				<Box
+					title="Próximas Ações"
+					actions={nextActions}
+					steps={steps}
+					selectedActions={selectedActions}
+					setSelectedActions={setSelectedActions}
+					message={"para fazer"}
+				/>
+				<Box
+					title="Ações Sem Data"
+					actions={undatedActions}
+					steps={steps}
+					selectedActions={selectedActions}
+					setSelectedActions={setSelectedActions}
+					message={"sem data"}
+				/>
+			</div>
+			<Outlet />
 		</div>
 	);
 };
@@ -305,7 +347,7 @@ const Box = ({
 			</div>
 
 			<div className="page-over">
-				<div className="grid items-start gap-2 md:gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+				<div className="grid items-start gap-2 md:gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-6 xxxl:grid-cols-8">
 					{actions.map((action: IAction) => (
 						<ActionDisplay
 							action={action}

@@ -12,7 +12,14 @@ body {
 	}
 
 	.button-small {
-		@apply p-3 space-x-2 text-sm;
+		@apply px-3 py-2 space-x-2 text-sm;
+	}
+	.button-circle {
+		@apply flex items-center justify-center w-10 h-10 p-0 text-xl;
+	}
+
+	.button-circle.button-small {
+		@apply w-8 h-8 text-lg;
 	}
 
 	.button-full {
@@ -43,8 +50,15 @@ body {
 		@apply p-4 bg-white rounded-lg shadow-md md:p-8 shadow-gray-300/50;
 	}
 
+	.label {
+		@apply block m-0 mb-2 text-xs font-medium tracking-wide uppercase whitespace-nowrap;
+	}
+
 	.input {
-		@apply w-full font-light border-gray-300 rounded-lg shadow-sm shadow-gray-200 focus:border-interdimensional hover:border-gray-400;
+		@apply w-full font-light border-gray-300 rounded-lg shadow-sm shadow-gray-200 focus:ring-2 focus:ring-interdimensional hover:border-gray-400 focus:border-interdimensional focus:hover:border-interdimensional;
+	}
+	.input-dark {
+		@apply bg-gray-900 border-gray-700 shadow-none hover:border-gray-600;
 	}
 
 	.badge {

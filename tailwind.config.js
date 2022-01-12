@@ -59,7 +59,12 @@ module.exports = {
 			task: colors.lime,
 			tiktok: colors.pink,
 		},
-		extend: {},
+		extend: {
+			screens: {
+				xxl: "1800px",
+				xxxl: "2200px",
+			},
+		},
 	},
 	plugins: [
 		require("@tailwindcss/typography"),
