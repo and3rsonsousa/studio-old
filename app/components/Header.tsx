@@ -6,6 +6,8 @@ import {
 	HiPlus,
 	HiX,
 } from "react-icons/hi";
+import { BsGrid3X3 } from "react-icons/bs";
+import { MdOutlineGridOn, MdOutlineTableRows } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
 import { IAccount, IBasic, ICampaign, IUser } from "~/types";
 import dayjs from "dayjs";
@@ -68,8 +70,8 @@ const Header = ({
 	campaigns: ICampaign[];
 	start?: string;
 }) => {
-	const [microPopup, showMicroPopup] = useState(true);
-	const [fullPopup, showfullPopup] = useState(true);
+	const [microPopup, showMicroPopup] = useState(false);
+	const [fullPopup, showfullPopup] = useState(false);
 
 	const [action, setAction] = useState({
 		name: "",
@@ -97,6 +99,11 @@ const Header = ({
 			<div className="flex items-center">
 				<div>
 					<button className="text-xl button button-small button-invisible">
+						<MdOutlineTableRows />
+					</button>
+				</div>
+				<div>
+					<button className="text-xl button button-small button-invisible">
 						<HiOutlineCalendar />
 					</button>
 				</div>
@@ -108,6 +115,12 @@ const Header = ({
 				<div>
 					<button className="text-xl button button-small button-invisible">
 						<HiOutlineViewList />
+					</button>
+				</div>
+				<div>
+					<button className="text-xl button button-small button-invisible">
+						{/* <BsGrid3X3 /> */}
+						<MdOutlineGridOn />
 					</button>
 				</div>
 			</div>
@@ -232,9 +245,15 @@ const Header = ({
 												}
 												value={action.account}
 											>
-												<option value=""></option>
+												<option
+													value=""
+													key="none"
+												></option>
 												{accounts.map((account) => (
-													<option value={account.id}>
+													<option
+														value={account.id}
+														key={account.id}
+													>
 														{account.name}
 													</option>
 												))}
@@ -276,6 +295,9 @@ const Header = ({
 																	value={
 																		account.id
 																	}
+																	key={
+																		account.id
+																	}
 																>
 																	{
 																		account.name
@@ -311,6 +333,7 @@ const Header = ({
 													{flows.map((flow) => (
 														<div
 															className={`relative flex ring-interdimensional ring-offset-2 items-center w-1/4 rounded-full overflow-x-hidden focus-within:ring`}
+															key={flow.id}
 														>
 															<input
 																type="radio"
@@ -378,6 +401,7 @@ const Header = ({
 													{steps.map((step) => (
 														<div
 															className={`relative flex ring-interdimensional ring-offset-2 items-center w-1/4 rounded-full overflow-x-hidden focus-within:ring`}
+															key={step.id}
 														>
 															<input
 																type="radio"
@@ -431,6 +455,7 @@ const Header = ({
 											Tag
 										</motion.label>
 										<motion.div
+											transition={item.transition}
 											layout
 											className="flex flex-wrap "
 											role="radiogroup"
@@ -438,7 +463,9 @@ const Header = ({
 											{tags.map((tag, index) =>
 												index >= 2 ? (
 													fullPopup && (
-														<AnimatePresence>
+														<AnimatePresence
+															key={tag.id}
+														>
 															<motion.div
 																layout
 																className={`relative w-1/2 flex ring-interdimensional ring-offset-2 items-center ${
@@ -487,7 +514,9 @@ const Header = ({
 														</AnimatePresence>
 													)
 												) : (
-													<AnimatePresence>
+													<AnimatePresence
+														key={tag.id}
+													>
 														<motion.div
 															transition={
 																item.transition
@@ -688,7 +717,10 @@ const Header = ({
 											>
 												<option value=""></option>
 												{campaigns.map((campaign) => (
-													<option value={campaign.id}>
+													<option
+														value={campaign.id}
+														key={campaign.id}
+													>
 														{campaign.name}
 													</option>
 												))}

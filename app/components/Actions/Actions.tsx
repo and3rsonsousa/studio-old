@@ -12,6 +12,8 @@ export default ({ actions }: { actions: string }) => (
 				nesciunt, placeat nulla accusantium amet eaque ducimus ipsam!
 				Tempore repudiandae aut odit nostrum nobis.
 			</p>
+			<h4>Lorem ipsum dolor sit amet consectetur.</h4>
+			<p>Lorem ipsum dolor sit.</p>
 		</div>
 	</div>
 );

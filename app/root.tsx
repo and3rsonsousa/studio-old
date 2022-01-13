@@ -37,7 +37,7 @@ export default function App() {
 			<body>
 				<Outlet />
 				{transition.state === "loading" ? (
-					<div className="fixed top-0 right-0 p-4">
+					<div className="fixed top-0 p-4 translate-x-1/2 right-1/2">
 						<div className="w-8 h-8 border-4 rounded-full border-interdimensional border-t-outrageous animate-spin"></div>
 					</div>
 				) : null}

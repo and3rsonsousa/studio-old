@@ -1,15 +1,16 @@
 import request, { gql } from "graphql-request";
-import { LoaderFunction, Outlet, redirect, useLoaderData } from "remix";
+import { LoaderFunction, Outlet, useLoaderData } from "remix";
 import { getData, getUserId } from "~/utils/session.server";
 import dayjs from "dayjs";
-import { IAccount, IAction, IBasic, ICampaign } from "~/types";
-import ActionDisplay from "~/components/Actions/Action";
+import { IAccount, IAction } from "~/types";
 import { isLate, isNext } from "~/utils/functions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { HiOutlineCalendar, HiOutlineViewList } from "react-icons/hi";
-import { CgBoard } from "react-icons/cg";
 import Header from "~/components/Header";
+import Box from "~/components/Box";
+import Legendas from "~/components/Legendas";
+import BoxCampaigns from "~/components/BoxCampaigns";
+import useSWR, { useSWRConfig, unstable_serialize } from "swr";
 
 export const loader: LoaderFunction = async ({ request }) => {
 	//Retorna dos dados das Actions que estão nas Accounts que o usuário tem acesso
@@ -103,12 +104,32 @@ export const loader: LoaderFunction = async ({ request }) => {
 			}
 		}
 	`;
-	let data = await getData(request, QUERY);
+	let serverData = await getData(request, QUERY);
 
-	return data;
+	return {
+		serverData,
+		QUERY,
+		fallback: {
+			"/dashboard/index": serverData,
+		},
+	};
 };
 
 export default () => {
+	let { QUERY, fallback } = useLoaderData();
+
+	let { data, error, isValidating } = useSWR(
+		"/dashboard/index",
+		() =>
+			request(
+				"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master",
+				QUERY
+			),
+		{
+			fallback,
+		}
+	);
+
 	let {
 		profile: { accounts, header_accounts },
 		tags,
@@ -117,29 +138,11 @@ export default () => {
 		campaigns,
 		profiles,
 		header_profile,
-	} = useLoaderData();
+	} = data;
 
-	// useSWR later
-
-	// let { data, error, isValidating } = useSWR(
-	// 	gql`
-	// 		{
-	// 			actions {
-	// 				id
-	// 				name
-	// 			}
-	// 		}
-	// 	`,
-	// 	(query) =>
-	// 		request(
-	// 			"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master",
-	// 			query
-	// 		)
-	// );
-
-	// useEffect(() => {
-	// 	console.log("Validating");
-	// }, [isValidating]);
+	useEffect(() => {
+		console.log(data.campaigns);
+	}, [data, isValidating]);
 
 	//Agrupa todas as ações/Actions das contas/Accounts numa lista única
 	let actions: IAction[] = accounts.map(
@@ -201,81 +204,9 @@ export default () => {
 				campaigns={campaigns}
 			/>
 			<div>
-				<div className="flex items-center justify-between pt-4 mb-4 space-x-4 snap-start">
-					<div className="prose">
-						<h2 className=" whitespace-nowrap">Campanhas</h2>
-					</div>
+				<BoxCampaigns campaigns={campaigns} />
 
-					<div>
-						<button className="button button-small button-ghost">
-							Ver todos
-						</button>
-					</div>
-				</div>
-				<div className="p-0 mb-8 page-over">
-					<div className="flex w-full overflow-x-auto divide-x scroll-smooth snap-x snap-mandatory">
-						{campaigns.map((campaign: ICampaign) => (
-							<div
-								key={campaign.id}
-								className="shrink-0 snap-start"
-							>
-								<div className="p-8 shrink-0 w-52 md:w-80">
-									<div className="text-lg font-medium leading-tight">
-										{campaign.name}
-									</div>
-									<div className="font-medium tracking-wide text-gray-400 uppercase text-xx">
-										{dayjs(campaign.start).format(
-											"[De] D [de] MMMM"
-										)}
-										{dayjs(campaign.end).format(
-											" [a] D [de] MMMM"
-										)}
-									</div>
-									<div className="mt-2 text-sm text-gray-600">
-										{campaign.actions.length > 0
-											? `${campaign.actions.length} Ações`
-											: "Nenhuma ação cadastrada até o momento."}
-									</div>
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
-
-				{/* <div className="py-8">
-
-				<div className="flex flex-wrap gap-2 mb-16">
-					{flows.map((item: IBasic) => (
-						<div className={`${item.slug}-bg badge`} key={item.id}>
-							{item.name}
-						</div>
-					))}
-				</div>
-				<div className="flex flex-wrap gap-2 mb-16">
-					{steps.map((item: IBasic) => (
-						<div className={`${item.slug}-bg badge`} key={item.id}>
-							{item.name}
-						</div>
-					))}
-				</div>
-				<div className="flex flex-wrap gap-2 mb-16">
-					{tags.map((item: IBasic) => (
-						<div className={`${item.slug}-bg badge`} key={item.id}>
-							{item.name}
-						</div>
-					))}
-				</div>
-				<div className="flex flex-wrap gap-2 mb-16">
-					{tags.map((item: IBasic) => (
-						<div
-							className={`action-${item.slug}-bg badge`}
-							key={item.id}
-						>
-							{item.name}
-						</div>
-					))}
-				</div>
-			</div> */}
+				{/* <Legendas flows={flows} steps={steps} tags={tags} /> */}
 				<Box
 					title="Hoje"
 					actions={todayActions}
@@ -312,57 +243,4 @@ export default () => {
 			<Outlet />
 		</div>
 	);
-};
-
-const Box = ({
-	actions,
-	title,
-	steps,
-	message,
-	selectedActions,
-	setSelectedActions,
-}: {
-	actions: IAction[];
-	steps: IBasic[];
-	title: string;
-	message: string;
-	selectedActions: any;
-	setSelectedActions: any;
-}) => {
-	return actions.length > 0 ? (
-		<div className="mb-8 snap-start">
-			<div className="flex items-center justify-between mb-4 space-x-4">
-				<div className="prose">
-					<h3 className="whitespace-nowrap ">{title}</h3>
-				</div>
-				<div className="hidden mt-1 text-xs leading-relaxed text-gray-400 uppercase md:block leading ">
-					Você tem {actions.length}
-					{actions.length > 1 ? " ações" : " ação"} {message}.
-				</div>
-				<div>
-					<button className="button button-small button-ghost">
-						Ver todos
-					</button>
-				</div>
-			</div>
-
-			<div className="page-over">
-				<div className="grid items-start gap-2 md:gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-6 xxxl:grid-cols-8">
-					{actions.map((action: IAction) => (
-						<ActionDisplay
-							action={action}
-							steps={steps}
-							key={action.id}
-							selected={
-								selectedActions.filter(
-									(selected: string) => selected === action.id
-								).length > 0
-							}
-							setSelectedActions={setSelectedActions}
-						/>
-					))}
-				</div>
-			</div>
-		</div>
-	) : null;
 };
