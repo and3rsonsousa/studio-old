@@ -61,7 +61,6 @@ export default function AddActionPopup({
 	campaigns,
 	start,
 	mutate,
-	mutateKey,
 }: {
 	microPopup: Boolean;
 	profile: IUser;
@@ -73,11 +72,10 @@ export default function AddActionPopup({
 	campaigns: ICampaign[];
 	start?: string;
 	mutate: Function;
-	mutateKey: string;
 }) {
 	const [fullPopup, showfullPopup] = useState(false);
 
-	const [action, setAction] = useState({
+	const emptyAction = {
 		name: "",
 		description: "",
 		account: "",
@@ -96,10 +94,9 @@ export default function AddActionPopup({
 					.format("YYYY-MM-DD[T]HH:mm:ss[-03:00]"),
 		end: "",
 		campaign: "",
-	});
+	};
 
-	const [error, setError] = useState({ field: "", message: "" });
-	const [virgin, setVirgin] = useState({
+	const emptyVirgin = {
 		name: true,
 		account: true,
 		profile_responsible: true,
@@ -107,7 +104,11 @@ export default function AddActionPopup({
 		step: true,
 		tag: true,
 		start: true,
-	});
+	};
+
+	const [action, setAction] = useState(emptyAction);
+	const [virgin, setVirgin] = useState(emptyVirgin);
+	const [error, setError] = useState({ field: "", message: "" });
 
 	let errors = {
 		name: (ignoreVirgin = false) => {
@@ -143,7 +144,7 @@ export default function AddActionPopup({
 		if (errors.name(true)) return false;
 		if (errors.account(true)) return false;
 
-		await request(
+		const mutateRequest = await request(
 			"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master",
 			gql`
 				mutation (
@@ -200,7 +201,12 @@ export default function AddActionPopup({
 			return data;
 		});
 
-		return null;
+		setAction(() => {
+			setVirgin(() => emptyVirgin);
+			return { ...emptyAction, start: dayjs().format("YYYY-MM-DD") };
+		});
+
+		return mutateRequest;
 	};
 
 	useEffect(() => {
@@ -712,8 +718,6 @@ export default function AddActionPopup({
 												"HH:mm:ss"
 											)}
 											onChange={(event) => {
-												console.log(event.target.value);
-
 												setAction(() => ({
 													...action,
 													start:

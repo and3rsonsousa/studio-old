@@ -15,7 +15,7 @@ interface IAccount {
 	slug: string;
 	colors: { hex: string }[];
 	profiles?: IUser;
-	actions?: [];
+	actions?: IAction[];
 	image?: { url: string };
 }
 
@@ -30,6 +30,7 @@ interface IAction {
 	step?: IBasic;
 	flow?: IBasic;
 	tag?: IBasic;
+	validating?: Boolean;
 }
 
 interface ICampaign {

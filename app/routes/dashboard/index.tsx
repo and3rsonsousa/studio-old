@@ -64,6 +64,13 @@ export const loader: LoaderFunction = async ({ request }) => {
 								hex
 							}
 						}
+						profile_responsible{
+							id
+							name
+							image{
+								url(transformation: {image: {resize: {width: 54, height: 54, fit: clip}}})
+							}
+						}
 						step{
 							id
 							name
@@ -130,8 +137,6 @@ export default () => {
 			fallback,
 		}
 	);
-
-	console.log("DATA", data);
 
 	let {
 		profile: { accounts, header_accounts },
@@ -206,7 +211,6 @@ export default () => {
 				flows={flows}
 				campaigns={campaigns}
 				mutate={mutate}
-				mutateKey="/dashboard/index"
 			/>
 			<div>
 				<BoxCampaigns campaigns={campaigns} />
@@ -219,6 +223,8 @@ export default () => {
 					selectedActions={selectedActions}
 					setSelectedActions={setSelectedActions}
 					message={"para hoje"}
+					mutate={mutate}
+					isValidating={isValidating}
 				/>
 				<Box
 					title="Ações Atrasadas"
@@ -227,6 +233,8 @@ export default () => {
 					selectedActions={selectedActions}
 					setSelectedActions={setSelectedActions}
 					message={"atrasadas"}
+					mutate={mutate}
+					isValidating={isValidating}
 				/>
 				<Box
 					title="Próximas Ações"
@@ -235,6 +243,8 @@ export default () => {
 					selectedActions={selectedActions}
 					setSelectedActions={setSelectedActions}
 					message={"para fazer"}
+					mutate={mutate}
+					isValidating={isValidating}
 				/>
 				<Box
 					title="Ações Sem Data"
@@ -243,6 +253,8 @@ export default () => {
 					selectedActions={selectedActions}
 					setSelectedActions={setSelectedActions}
 					message={"sem data"}
+					mutate={mutate}
+					isValidating={isValidating}
 				/>
 			</div>
 			<Outlet />

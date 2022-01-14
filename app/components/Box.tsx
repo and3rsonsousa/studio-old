@@ -8,6 +8,8 @@ const Box = ({
 	message,
 	selectedActions,
 	setSelectedActions,
+	mutate,
+	isValidating,
 }: {
 	actions: IAction[];
 	steps: IBasic[];
@@ -15,6 +17,8 @@ const Box = ({
 	message: string;
 	selectedActions: any;
 	setSelectedActions: any;
+	mutate: Function;
+	isValidating: Boolean;
 }) => {
 	return actions.length > 0 ? (
 		<div className="mb-8 snap-start">
@@ -35,19 +39,25 @@ const Box = ({
 
 			<div className="page-over">
 				<div className="grid items-start gap-2 md:gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-6 xxxl:grid-cols-8">
-					{actions.map((action: IAction) => (
-						<Action
-							action={action}
-							steps={steps}
-							key={action.id}
-							selected={
-								selectedActions.filter(
-									(selected: string) => selected === action.id
-								).length > 0
-							}
-							setSelectedActions={setSelectedActions}
-						/>
-					))}
+					{actions.map(
+						(action: IAction) =>
+							action.step?.slug !== "accomplished" && (
+								<Action
+									action={action}
+									steps={steps}
+									key={action.id}
+									selected={
+										selectedActions.filter(
+											(selected: string) =>
+												selected === action.id
+										).length > 0
+									}
+									setSelectedActions={setSelectedActions}
+									mutate={mutate}
+									isValidating={isValidating}
+								/>
+							)
+					)}
 				</div>
 			</div>
 		</div>

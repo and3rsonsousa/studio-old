@@ -20,7 +20,6 @@ const Header = ({
 	campaigns,
 	start,
 	mutate,
-	mutateKey,
 }: {
 	profile: IUser;
 	profiles: IUser[];
@@ -31,9 +30,8 @@ const Header = ({
 	campaigns: ICampaign[];
 	start?: string;
 	mutate: Function;
-	mutateKey: string;
 }) => {
-	const [microPopup, showMicroPopup] = useState(true);
+	const [microPopup, showMicroPopup] = useState(false);
 
 	return (
 		<div className="flex items-center justify-between">
@@ -95,7 +93,6 @@ const Header = ({
 					tags={tags}
 					start={start}
 					mutate={mutate}
-					mutateKey={mutateKey}
 				/>
 			</div>
 		</div>

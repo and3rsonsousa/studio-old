@@ -1,6 +1,6 @@
 import { gql } from "graphql-request";
 import { Link, LoaderFunction, Outlet, useLoaderData } from "remix";
-import { User } from "~/types";
+import { IUser } from "~/types";
 import { getData } from "~/utils/session.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -36,7 +36,7 @@ export default () => {
 			</header>
 			<article className="flex space-x-4">
 				<div className="flex-shrink-0 w-64 -ml-4 ">
-					{profiles.map((profile: User) => (
+					{profiles.map((profile: IUser) => (
 						<Link
 							to={`/dashboard/profiles/${profile.id}`}
 							key={profile.id}

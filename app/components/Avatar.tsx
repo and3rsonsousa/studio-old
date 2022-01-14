@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { IAccount } from "~/types";
+import { Link } from "remix";
+import { IAccount, IUser } from "~/types";
 
 export default function Avatar({
 	avatar,
@@ -8,13 +9,15 @@ export default function Avatar({
 	smallest = false,
 	border = false,
 	_className,
+	url,
 }: {
-	avatar: IAccount;
+	avatar?: IAccount | IUser;
 	small?: Boolean;
 	medium?: Boolean;
 	smallest?: Boolean;
 	border?: Boolean;
 	_className?: string;
+	url?: string;
 }) {
 	return avatar ? (
 		<motion.div
@@ -22,7 +25,8 @@ export default function Avatar({
 			transition={{ ease: "easeOut" }}
 			className={_className ? _className : undefined}
 		>
-			<div
+			<Link
+				to={url ? url : ""}
 				className={` ${
 					smallest
 						? "w-4 h-4 text-xx"
@@ -35,7 +39,7 @@ export default function Avatar({
 					border ? " ring-2 ring-white" : ""
 				}`}
 				style={
-					avatar.colors
+					"colors" in avatar
 						? { backgroundColor: avatar.colors[0]?.hex }
 						: undefined
 				}
@@ -49,7 +53,7 @@ export default function Avatar({
 				) : (
 					<span
 						style={
-							avatar.colors
+							"colors" in avatar
 								? { color: avatar.colors[1]?.hex }
 								: undefined
 						}
@@ -67,7 +71,7 @@ export default function Avatar({
 						</span>
 					</span>
 				)}
-			</div>
+			</Link>
 		</motion.div>
 	) : null;
 }
