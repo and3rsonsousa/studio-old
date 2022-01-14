@@ -50,6 +50,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 					}
 				}
 				accounts{
+					id
 					actions {
 						id
 						name
@@ -129,6 +130,8 @@ export default () => {
 			fallback,
 		}
 	);
+
+	console.log("DATA", data);
 
 	let {
 		profile: { accounts, header_accounts },

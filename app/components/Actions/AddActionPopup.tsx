@@ -1,7 +1,15 @@
 import dayjs from "dayjs";
 import { AnimatePresence, motion } from "framer-motion";
+import request, { gql } from "graphql-request";
 import { useEffect, useState } from "react";
-import { IAccount, IBasic, ICampaign, IUser } from "~/types";
+import {
+	IAccount,
+	IAction,
+	IBasic,
+	ICampaign,
+	IDashboardIndex,
+	IUser,
+} from "~/types";
 
 const menu = {
 	initial: {
@@ -131,10 +139,67 @@ export default function AddActionPopup({
 		},
 	};
 
-	const add = () => {
+	const add = async () => {
 		if (errors.name(true)) return false;
 		if (errors.account(true)) return false;
-		console.log(action);
+
+		await request(
+			"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master",
+			gql`
+				mutation (
+					$name: String!
+					$description: String!
+					$start: String!
+					$account: ID!
+					$profile_creator: ID!
+					$profile_responsible: ID!
+					$flow: ID!
+					$step: ID!
+					$tag: ID!
+					$end: String!
+				) {
+					createAction(
+						data: {
+							name: $name
+							description: $description
+							start: $start
+							end: $end
+							account: { connect: { id: $account } }
+							profile_creator: {
+								connect: { id: $profile_creator }
+							}
+							profile_responsible: {
+								connect: { id: $profile_responsible }
+							}
+							flow: { connect: { id: $flow } }
+							step: { connect: { id: $step } }
+							tag: { connect: { id: $tag } }
+						}
+					) {
+						id
+					}
+				}
+			`,
+			action
+		);
+
+		mutate((data: IDashboardIndex) => {
+			// const account = data.profile.accounts?.filter(
+			// 	(account) => account.id === action.account
+			// )[0];
+
+			// let actions: Object[] | undefined = account?.actions;
+			// actions?.push(action);
+
+			// console.log({
+			// 	...data,
+			// 	profile: { accounts: { ...data.profile.accounts, account } },
+			// });
+
+			// let newData = { ...data };
+			return data;
+		});
+
 		return null;
 	};
 

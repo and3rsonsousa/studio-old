@@ -50,4 +50,14 @@ interface IBasic {
 	slug?: string;
 }
 
-export type { IUser, IAccount, IAction, ICampaign, IBasic };
+interface IDashboardIndex {
+	campaigns: ICampaign[];
+	header_profile: IUser;
+	profile: IUser;
+	profiles: IUser[];
+	tags: IBasic[];
+	steps: IBasic[];
+	flows: IBasic[];
+}
+
+export type { IUser, IAccount, IAction, ICampaign, IBasic, IDashboardIndex };
