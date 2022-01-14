@@ -44,7 +44,7 @@ export default ({
 		>
 			{/* Tag e Flow */}
 			{(action.tag || action.flow) && (
-				<div className="flex pr-6 mb-1">
+				<div className="flex pr-6 mb-2">
 					<div
 						className={`${action.flow?.slug}-bg badge min-w-[50px] rounded-r-none `}
 					>
@@ -178,7 +178,7 @@ export default ({
 					))}
 				</div>
 			</div>
-			<div className="absolute top-4 -left-3">
+			<div className="absolute left-0 -translate-x-1/2 top-3">
 				<Avatar avatar={action.account} small={true} />
 			</div>
 		</div>

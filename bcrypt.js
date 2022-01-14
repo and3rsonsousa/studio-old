@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 
-const password = "praninguemsaber";
+const password = "exacta123";
 const saltRounds = 10;
 
 bcrypt.genSalt(saltRounds, function (err, salt) {

@@ -81,7 +81,7 @@ export default () => {
 				<h4>Login</h4>
 				<form method="POST">
 					{actionData?.errors?.login && (
-						<div className="p-2 text-xs rounded-lg error bg-semantic-error-light text-semantic-error-dark">
+						<div className="error-bg">
 							{actionData.errors.login}
 						</div>
 					)}

@@ -71,7 +71,7 @@ export default ({ user }: { user: IUser }) => {
 						{compact ? (
 							<Avatar avatar={account} small={true} />
 						) : (
-							account.name
+							<div className="line-clamp-1">{account.name}</div>
 						)}
 					</Link>
 				))}

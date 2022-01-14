@@ -4,13 +4,13 @@ import { getData, getUserId } from "~/utils/session.server";
 import dayjs from "dayjs";
 import { IAccount, IAction } from "~/types";
 import { isLate, isNext } from "~/utils/functions";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import Header from "~/components/Header";
 import Box from "~/components/Box";
 import Legendas from "~/components/Legendas";
 import BoxCampaigns from "~/components/BoxCampaigns";
-import useSWR, { useSWRConfig, unstable_serialize } from "swr";
+import useSWR from "swr";
 
 export const loader: LoaderFunction = async ({ request }) => {
 	//Retorna dos dados das Actions que estão nas Accounts que o usuário tem acesso
@@ -118,7 +118,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default () => {
 	let { QUERY, fallback } = useLoaderData();
 
-	let { data, error, isValidating } = useSWR(
+	let { data, mutate, isValidating } = useSWR(
 		"/dashboard/index",
 		() =>
 			request(
@@ -140,9 +140,9 @@ export default () => {
 		header_profile,
 	} = data;
 
-	useEffect(() => {
-		console.log(data.campaigns);
-	}, [data, isValidating]);
+	// useEffect(() => {
+	// 	console.log(data.campaigns);
+	// }, [data, isValidating]);
 
 	//Agrupa todas as ações/Actions das contas/Accounts numa lista única
 	let actions: IAction[] = accounts.map(
@@ -202,6 +202,8 @@ export default () => {
 				tags={tags}
 				flows={flows}
 				campaigns={campaigns}
+				mutate={mutate}
+				mutateKey="/dashboard/index"
 			/>
 			<div>
 				<BoxCampaigns campaigns={campaigns} />
