@@ -93,22 +93,22 @@ body {
 }
 
 .action-idea-bg {
-	@apply transition duration-500 bg-white border hover:border-idea-500 hover:ring-4 hover:ring-idea-500/30;
+	@apply transition duration-300 bg-white border hover:border-idea-500 hover:ring-4 hover:ring-idea-500/30;
 }
 .action-do-bg {
-	@apply transition duration-500 bg-white border hover:border-do-500 hover:ring-4 hover:ring-do-500/30;
+	@apply transition duration-300 bg-white border hover:border-do-500 hover:ring-4 hover:ring-do-500/30;
 }
 .action-doing-bg {
-	@apply transition duration-500 bg-white border hover:border-doing-500 hover:ring-4 hover:ring-doing-500/30;
+	@apply transition duration-300 bg-white border hover:border-doing-500 hover:ring-4 hover:ring-doing-500/30;
 }
 .action-review-bg {
-	@apply transition duration-500 bg-white border hover:border-review-500 hover:ring-4 hover:ring-review-500/30;
+	@apply transition duration-300 bg-white border hover:border-review-500 hover:ring-4 hover:ring-review-500/30;
 }
 .action-done-bg {
-	@apply transition duration-500 bg-white border hover:border-done-500 hover:ring-4 hover:ring-done-500/30;
+	@apply transition duration-300 bg-white border hover:border-done-500 hover:ring-4 hover:ring-done-500/30;
 }
 .action-accomplished-bg {
-	@apply transition duration-500 bg-white border hover:border-accomplished-500 hover:ring-4 hover:ring-accomplished-500/30;
+	@apply transition duration-300 bg-white border hover:border-accomplished-500 hover:ring-4 hover:ring-accomplished-500/30;
 }
 
 .planning-bg {

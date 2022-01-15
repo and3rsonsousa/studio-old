@@ -5,6 +5,8 @@ const Box = ({
 	actions,
 	title,
 	steps,
+	tags,
+	flows,
 	message,
 	selectedActions,
 	setSelectedActions,
@@ -13,6 +15,8 @@ const Box = ({
 }: {
 	actions: IAction[];
 	steps: IBasic[];
+	tags: IBasic[];
+	flows: IBasic[];
 	title: string;
 	message: string;
 	selectedActions: any;
@@ -45,6 +49,8 @@ const Box = ({
 								<Action
 									action={action}
 									steps={steps}
+									flows={flows}
+									tags={tags}
 									key={action.id}
 									selected={
 										selectedActions.filter(
@@ -54,7 +60,6 @@ const Box = ({
 									}
 									setSelectedActions={setSelectedActions}
 									mutate={mutate}
-									isValidating={isValidating}
 								/>
 							)
 					)}

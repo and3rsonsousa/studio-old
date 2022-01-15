@@ -1,11 +1,4 @@
-import {
-	IAccount,
-	IAction,
-	IBasic,
-	ICampaign,
-	IDashboardIndex,
-	IUser,
-} from "~/types";
+import { IAction, IBasic } from "~/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
@@ -24,6 +17,7 @@ import { BiDuplicate } from "react-icons/bi";
 import Avatar from "../Avatar";
 import request, { gql } from "graphql-request";
 import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -34,44 +28,80 @@ dayjs.tz.setDefault("America/Fortaleza");
 
 export default ({
 	action,
+	flows,
 	steps,
+	tags,
 	big = true,
 	selected = false,
 	setSelectedActions,
 	mutate,
-	isValidating,
 }: {
 	action: IAction;
+	flows: IBasic[];
 	steps: IBasic[];
+	tags: IBasic[];
 	big?: Boolean;
 	selected?: Boolean;
 	setSelectedActions: any;
 	mutate: Function;
-	isValidating: Boolean;
 }) => {
-	const updateStep = async (id: string, step: string) => {
+	const updateFlow = async (id: string, flow: IBasic) => {
 		mutate((data: any) => {
-			const accounts = data.profile.accounts || [];
-			const accountIndex =
-				data.profile.accounts?.findIndex(
-					(account: any) => account.id === action.account.id
-				) || 0;
+			return newData(data, action, { flow: flow });
+		}, false);
 
-			const account = accounts[accountIndex];
-			const actions = account.actions || [];
+		const mutateRequest = await request(
+			"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master",
+			gql`
+				mutation ($flow: ID!, $id: ID!) {
+					updateAction(
+						where: { id: $id }
+						data: { flow: { connect: { id: $flow } } }
+					) {
+						id
+					}
+				}
+			`,
+			{
+				id,
+				flow: flow.id,
+			}
+		);
 
-			const actionIndex =
-				actions.findIndex((_action: any) => _action.id === action.id) ||
-				0;
+		mutate();
+		return mutateRequest;
+	};
 
-			const oldAction = actions[actionIndex];
-			const newAction = { ...oldAction, validating: true };
+	const updateTag = async (id: string, tag: IBasic) => {
+		mutate((data: any) => {
+			return newData(data, action, { tag: tag });
+		}, false);
 
-			const newData = data;
-			newData.profile.accounts[accountIndex].actions[actionIndex] =
-				newAction;
+		const mutateRequest = await request(
+			"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master",
+			gql`
+				mutation ($tag: ID!, $id: ID!) {
+					updateAction(
+						where: { id: $id }
+						data: { tag: { connect: { id: $tag } } }
+					) {
+						id
+					}
+				}
+			`,
+			{
+				id,
+				tag: tag.id,
+			}
+		);
 
-			return data;
+		mutate();
+		return mutateRequest;
+	};
+
+	const updateStep = async (id: string, step: IBasic) => {
+		mutate((data: any) => {
+			return newData(data, action, { step: step });
 		}, false);
 
 		const mutateRequest = await request(
@@ -88,11 +118,12 @@ export default ({
 			`,
 			{
 				id,
-				step,
+				step: step.id,
 			}
 		);
 
 		mutate();
+
 		return mutateRequest;
 	};
 
@@ -108,36 +139,17 @@ export default ({
 					action.validating ? " scale-90 opacity-25" : ""
 				}`}
 			>
-				{/* Tag e Flow */}
-				{(action.tag || action.flow) && (
-					<div className="flex pr-6 mb-2">
-						<div
-							className={`${action.flow?.slug}-bg badge min-w-[50px] rounded-r-none `}
-						>
-							{big ? action.flow?.name : ""}
-						</div>
-						<div
-							className={`${
-								action.tag?.slug
-							}-bg badge min-w-[50px] ${
-								action.flow ? "rounded-none" : ""
-							}`}
-						>
-							{big ? action.tag?.name : ""}
-						</div>
-						<div
-							className={`${
-								action.step?.slug
-							}-bg badge min-w-[50px] ${
-								action.flow || action.tag
-									? "rounded-l-none"
-									: ""
-							}`}
-						>
-							{big ? action.step?.name : ""}
-						</div>
-					</div>
-				)}
+				{/* Tag - Flow - Step */}
+				<HeadMenu
+					big={big}
+					steps={steps}
+					tags={tags}
+					flows={flows}
+					action={action}
+					updateFlow={updateFlow}
+					updateTag={updateTag}
+					updateStep={updateStep}
+				/>
 				{/* Nome da Ação */}
 				<div
 					className={`${
@@ -223,7 +235,20 @@ export default ({
 						<HiCheck className="text-xl text-white" />
 					</button>
 				)}
-				<div className="absolute bottom-0 left-0 w-full h-8 overflow-hidden rounded-b-lg group">
+
+				<div className="absolute bottom-0 left-0 flex w-full h-1 overflow-hidden rounded-b">
+					{steps.map((step: IBasic) => (
+						<div
+							key={step.id}
+							className={`${step.slug}-bg h-1 ${
+								step.slug === action.step?.slug
+									? " w-full"
+									: " w-12"
+							}`}
+						></div>
+					))}
+				</div>
+				{/* <div className="absolute bottom-0 left-0 w-full h-8 overflow-hidden rounded-b-lg group">
 					<div className="absolute bottom-0 left-0 flex w-full h-1 transition-all group-hover:h-8 ">
 						{steps.map((step: IBasic) => (
 							<button
@@ -233,7 +258,7 @@ export default ({
 										? " w-full "
 										: " w-8 "
 								} hover:w-full transition-all uppercase text-xxx tracking-wide font-medium overflow-hidden duration-300 text-center`}
-								onClick={() => updateStep(action.id, step.id)}
+								// onClick={() => updateStep(action.id, step)}
 							>
 								<div
 									className={`w-full p-2 h-8 transition duration-500 ${
@@ -244,13 +269,14 @@ export default ({
 								>
 									{step.name}
 								</div>
-								{/* <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
-							{step.name}
-						</div> */}
 							</button>
 						))}
 					</div>
-				</div>
+				</div> */}
+				{/* <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
+								 {step.name}
+							 </div>  */}
+
 				<div className="absolute left-0 -translate-x-1/2 top-3">
 					<Avatar avatar={action.account} small={true} />
 					<Avatar
@@ -265,3 +291,169 @@ export default ({
 		</AnimatePresence>
 	);
 };
+
+function newData(data: any, action: IAction, value: any) {
+	const accounts = data.profile.accounts || [];
+	const accountIndex =
+		data.profile.accounts?.findIndex(
+			(account: any) => account.id === action.account.id
+		) || 0;
+
+	const account = accounts[accountIndex];
+	const actions = account.actions || [];
+
+	const actionIndex =
+		actions.findIndex((_action: any) => _action.id === action.id) || 0;
+
+	const oldAction = actions[actionIndex];
+	const newAction = Object.assign(
+		oldAction,
+		{ validating: true },
+		{ ...value }
+	);
+
+	const _data = data;
+	_data.profile.accounts[accountIndex].actions[actionIndex] = newAction;
+
+	return _data;
+}
+
+function HeadMenu({
+	action,
+	flows,
+	steps,
+	tags,
+	big,
+	updateFlow,
+	updateTag,
+	updateStep,
+}: {
+	action: IAction;
+	flows: IBasic[];
+	steps: IBasic[];
+	tags: IBasic[];
+	big: Boolean;
+	updateFlow: Function;
+	updateTag: Function;
+	updateStep: Function;
+}) {
+	const [showFlows, setShowFlows] = useState(false);
+	const [showTags, setShowTags] = useState(false);
+	const [showSteps, setShowSteps] = useState(false);
+
+	function closeAll() {
+		setShowFlows(() => false);
+		setShowTags(() => false);
+		setShowSteps(() => false);
+	}
+
+	return (
+		<div className="flex pr-6 mb-2">
+			<div className="relative">
+				<button
+					className={`${action.flow?.slug}-bg badge min-w-[50px] rounded-r-none `}
+					onClick={() => {
+						setShowFlows(!showFlows);
+						setShowTags(false);
+						setShowSteps(false);
+					}}
+				>
+					{big ? action.flow?.name : ""}
+				</button>
+				<SubMenu
+					actionItem={action.flow}
+					action={action}
+					items={flows}
+					show={showFlows}
+					closeAll={closeAll}
+					update={updateFlow}
+				/>
+			</div>
+			<div className="relative">
+				<button
+					className={`${action.tag?.slug}-bg badge min-w-[50px] rounded-none `}
+					onClick={() => {
+						setShowTags(!showTags);
+						setShowFlows(false);
+						setShowSteps(false);
+					}}
+				>
+					{big ? action.tag?.name : ""}
+				</button>
+				<SubMenu
+					actionItem={action.tag}
+					action={action}
+					items={tags}
+					show={showTags}
+					closeAll={closeAll}
+					update={updateTag}
+				/>
+			</div>
+			<div className="relative">
+				<button
+					className={`${action.step?.slug}-bg badge min-w-[50px] rounded-l-none `}
+					onClick={() => {
+						setShowSteps(!showSteps);
+						setShowFlows(false);
+						setShowTags(false);
+					}}
+				>
+					{big ? action.step?.name : ""}
+				</button>
+				<SubMenu
+					actionItem={action.step}
+					action={action}
+					items={steps}
+					show={showSteps}
+					closeAll={closeAll}
+					update={updateStep}
+				/>
+			</div>
+		</div>
+	);
+}
+
+function SubMenu({
+	actionItem,
+	action,
+	show,
+	closeAll,
+	items,
+	update,
+}: {
+	actionItem: IBasic | undefined;
+	action: IBasic | undefined;
+	show: Boolean;
+	closeAll: Function;
+	items: IBasic[];
+	update: Function;
+}) {
+	return (
+		<AnimatePresence>
+			{show && (
+				<motion.div
+					initial={{ scale: 0.9, opacity: 0 }}
+					animate={{ scale: 1, opacity: 1 }}
+					exit={{ scale: 0.9, opacity: 0 }}
+					className="absolute left-0 z-10 py-2 origin-top bg-white border rounded-lg shadow-lg shadow-gray-300 top-8"
+				>
+					{items.map(
+						(item, index) =>
+							item.slug !== actionItem?.slug && (
+								<button
+									key={index}
+									className="block w-full px-4 py-2 text-sm font-light text-left text-gray-700 hover:bg-gray-200"
+									onClick={() => {
+										update(action?.id, item);
+										closeAll();
+									}}
+								>
+									{item.name}
+								</button>
+							)
+					)}
+				</motion.div>
+			)}
+		</AnimatePresence>
+	);
+}
