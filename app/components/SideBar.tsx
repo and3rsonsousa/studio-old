@@ -153,6 +153,17 @@ export default ({ user }: { user: IUser }) => {
 				</div>
 			)}
 
+			<div>
+				<Link
+					to="/roadmap"
+					className={`${
+						compact ? "px-4" : "px-8"
+					} font-light tracking-wider text-xx`}
+				>
+					{compact ? "RM" : "Roadmap"}
+				</Link>
+			</div>
+
 			<div
 				className={`absolute hidden sm:block right-0 z-10 ${
 					compact ? "top-0" : "top-6"

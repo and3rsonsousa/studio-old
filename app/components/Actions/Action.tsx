@@ -287,6 +287,18 @@ export default ({
 						url={`/dashboard/profiles/${action.profile_responsible?.id}`}
 					/>
 				</div>
+
+				{action.validating && (
+					<motion.div
+						initial={{ scale: 2, opacity: 0 }}
+						animate={{ scale: 1, opacity: 1 }}
+						exit={{ scale: 2, opacity: 0 }}
+						transition={{ animate: { duration: 500 } }}
+						className="absolute inset-0 grid place-items-center"
+					>
+						<div className="w-6 h-6 border-4 rounded-full border-interdimensional animate-spin border-t-gray-100"></div>
+					</motion.div>
+				)}
 			</motion.div>
 		</AnimatePresence>
 	);
@@ -435,20 +447,29 @@ function SubMenu({
 					initial={{ scale: 0.9, opacity: 0 }}
 					animate={{ scale: 1, opacity: 1 }}
 					exit={{ scale: 0.9, opacity: 0 }}
-					className="absolute left-0 z-10 py-2 origin-top bg-white border rounded-lg shadow-lg shadow-gray-300 top-8"
+					className={`absolute left-0 z-10 p-2 origin-top bg-white border rounded-lg shadow-lg shadow-gray-300 top-8 ${
+						items.length > 7
+							? "grid grid-cols-3 w-80"
+							: items.length > 4
+							? "grid grid-cols-2 w-60"
+							: ""
+					}`}
 				>
 					{items.map(
 						(item, index) =>
 							item.slug !== actionItem?.slug && (
 								<button
 									key={index}
-									className="block w-full px-4 py-2 text-sm font-light text-left text-gray-700 hover:bg-gray-200"
+									className="flex items-center justify-start w-full p-2 space-x-2 text-xs font-medium tracking-wider text-gray-500 uppercase rounded-lg hover:bg-gray-200"
 									onClick={() => {
 										update(action?.id, item);
 										closeAll();
 									}}
 								>
-									{item.name}
+									<div
+										className={`w-2 h-2 rounded-full ${item.slug}-bg`}
+									></div>
+									<div>{item.name}</div>
 								</button>
 							)
 					)}
