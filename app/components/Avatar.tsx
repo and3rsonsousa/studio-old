@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Link } from "remix";
+import { Link, redirect } from "remix";
 import { IAccount, IUser } from "~/types";
 
 export default function Avatar({
@@ -25,8 +25,11 @@ export default function Avatar({
 			transition={{ ease: "easeOut" }}
 			className={_className ? _className : undefined}
 		>
-			<Link
-				to={url ? url : ""}
+			<div
+				onClick={() => {
+					console.log(url);
+					if (url) location.replace(url);
+				}}
 				className={` ${
 					smallest
 						? "w-4 h-4 text-xx"
@@ -37,7 +40,7 @@ export default function Avatar({
 						: "w-6 h-6 lg:w-14 text-xx lg:h-14 lg:text-base"
 				} rounded-full overflow-hidden font-bold bg-neutral-2 text-neutral-4 flex justify-center items-center${
 					border ? " ring-2 ring-white" : ""
-				}`}
+				} ${url ? " cursor-pointer" : ""}`}
 				style={
 					"colors" in avatar
 						? { backgroundColor: avatar.colors[0]?.hex }
@@ -71,7 +74,7 @@ export default function Avatar({
 						</span>
 					</span>
 				)}
-			</Link>
+			</div>
 		</motion.div>
 	) : null;
 }

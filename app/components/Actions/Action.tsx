@@ -11,13 +11,17 @@ import {
 	HiChevronRight,
 	HiOutlineCheckCircle,
 	HiOutlineDotsHorizontal,
+	HiOutlineMinusCircle,
+	HiOutlinePencilAlt,
 	HiOutlineX,
+	HiOutlineXCircle,
 } from "react-icons/hi";
 import { BiDuplicate } from "react-icons/bi";
 import Avatar from "../Avatar";
 import request, { gql } from "graphql-request";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import ContentEditable from "react-contenteditable";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -45,6 +49,7 @@ export default ({
 	setSelectedActions: any;
 	mutate: Function;
 }) => {
+	const name = useRef(action.name);
 	const updateFlow = async (id: string, flow: IBasic) => {
 		mutate((data: any) => {
 			return newData(data, action, { flow: flow });
@@ -127,6 +132,31 @@ export default ({
 		return mutateRequest;
 	};
 
+	const updateName = async (id: string) => {
+		mutate((data: any) => {
+			return newData(data, action, { name: name.current });
+		}, false);
+
+		const mutateRequest = await request(
+			"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master",
+			gql`
+				mutation ($name: String!, $id: ID!) {
+					updateAction(where: { id: $id }, data: { name: $name }) {
+						id
+					}
+				}
+			`,
+			{
+				id,
+				name: name.current,
+			}
+		);
+
+		mutate();
+
+		return mutateRequest;
+	};
+
 	return (
 		<AnimatePresence>
 			<motion.div
@@ -135,29 +165,98 @@ export default ({
 					action.step?.slug
 				}-bg relative rounded-lg ${
 					big ? "p-4" : "p-2 pl-4 "
-				}  cursor-pointer origin-top  ${
+				} origin-top  ${
 					action.validating ? " scale-90 opacity-25" : ""
 				}`}
 			>
-				{/* Tag - Flow - Step */}
-				<HeadMenu
-					big={big}
-					steps={steps}
-					tags={tags}
-					flows={flows}
-					action={action}
-					updateFlow={updateFlow}
-					updateTag={updateTag}
-					updateStep={updateStep}
-				/>
+				<div className="flex space-x-2">
+					{/* Tag - Flow - Step */}
+					<HeadMenu
+						big={big}
+						steps={steps}
+						tags={tags}
+						flows={flows}
+						action={action}
+						updateFlow={updateFlow}
+						updateTag={updateTag}
+						updateStep={updateStep}
+					/>
+
+					<div className="relative group">
+						<button className="p-1 button button-ghost">
+							<HiOutlineDotsHorizontal />
+						</button>
+						<div className="absolute top-0 right-0 flex invisible text-xl transition-all duration-300 scale-90 translate-x-4 bg-gray-900 rounded-lg shadow-xl opacity-0 shadow-gray-800/50 transform-cpu group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 group-hover:scale-100">
+							{/* Editar a Ação */}
+							<button className="px-2 py-1 rounded-r-none button button-invert button-ghost">
+								<HiOutlinePencilAlt />
+							</button>
+
+							{/* Selecionar ação/Action */}
+							<button
+								className="px-2 py-1 rounded-none button button-invert button-ghost"
+								onClick={() => {
+									setSelectedActions((old: string[]) => {
+										return selected
+											? old.filter(
+													(item) => item !== action.id
+											  )
+											: [...old, action.id];
+									});
+								}}
+							>
+								{selected ? (
+									<HiOutlineMinusCircle />
+								) : (
+									<HiOutlineCheckCircle />
+								)}
+							</button>
+							{/* Duplicar ação/Action */}
+							<button className="px-2 py-1 rounded-none button button-invert button-ghost">
+								<BiDuplicate />
+							</button>
+							{/* Excluir ação/Action */}
+							<button className="px-2 py-1 rounded-l-none button button-invert button-ghost">
+								<HiOutlineX />
+							</button>
+						</div>
+					</div>
+				</div>
 				{/* Nome da Ação */}
-				<div
+				{/* <textarea
 					className={`${
 						big ? "text-lg font-medium" : "text-sm"
-					} leading-tight  pr-6`}
-				>
-					{action.name}
-				</div>
+					} leading-tight p-0  pr-6 hover:ring rounded-lg focus:ring-interdimensional w-full border-0 resize-none`}
+					onChange={(event) => {
+						event.target.style.height = "1px";
+						event.target.style.height =
+							event.target.scrollHeight + "px";
+						setName(() => event?.target.value);
+					}}
+					onBlur={() =>
+						action.name !== name ? updateName(action.id) : null
+					}
+					defaultValue={name}
+					rows={Math.floor(name.length / 16) || 1}
+				></textarea> */}
+				<ContentEditable
+					html={name.current}
+					onChange={(event) =>
+						(name.current = event?.target.value
+							.replace(/(<([^>]+)>)/gi, "")
+							.toString())
+					}
+					className={`${
+						big ? "text-lg font-medium" : "text-sm"
+					} leading-tight p-0  pr-6 hover:ring rounded-lg focus:ring-interdimensional w-full border-0 resize-none`}
+					onBlur={() => {
+						action.name !== name.current
+							? updateName(action.id)
+							: null;
+					}}
+				/>
+
+				<div>{name.current}</div>
 
 				{big && action.description && (
 					<div className={`text-sm mt-2 line-clamp-3 text-gray-600`}>
@@ -185,44 +284,7 @@ export default ({
 						</div>
 					</div>
 				) : null}
-				<div className="absolute top-2 right-3 group">
-					<button className="p-1 button button-ghost">
-						<HiOutlineDotsHorizontal />
-					</button>
-					<div className="absolute top-0 right-0 flex invisible text-xl transition-all duration-300 scale-90 translate-x-4 bg-gray-900 rounded-lg shadow-xl opacity-0 shadow-gray-400 transform-cpu group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 group-hover:scale-100">
-						{/* Voltar um Passo na realização */}
-						<button className="p-1 rounded-r-none button button-invert button-ghost">
-							<HiChevronLeft />
-						</button>
-						{/* Avançar um Passo na realização */}
-						<button className="p-1 rounded-none button button-invert button-ghost">
-							<HiChevronRight />
-						</button>
-						{/* Selecionar ação/Action */}
-						<button
-							className="p-1 rounded-none button button-invert button-ghost"
-							onClick={() => {
-								setSelectedActions((old: string[]) => {
-									return selected
-										? old.filter(
-												(item) => item !== action.id
-										  )
-										: [...old, action.id];
-								});
-							}}
-						>
-							<HiOutlineCheckCircle />
-						</button>
-						{/* Duplicar ação/Action */}
-						<button className="p-1 rounded-none button button-invert button-ghost">
-							<BiDuplicate />
-						</button>
-						{/* Excluir ação/Action */}
-						<button className="p-1 rounded-l-none button button-invert button-ghost">
-							<HiOutlineX />
-						</button>
-					</div>
-				</div>
+
 				{selected && (
 					<button
 						className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 translate-x-1/2 -translate-y-1/2 rounded-full bg-interdimensional"
@@ -360,10 +422,10 @@ function HeadMenu({
 	}
 
 	return (
-		<div className="flex pr-6 mb-2">
+		<div className="relative grid grid-cols-3 mb-2">
 			<div className="relative">
 				<button
-					className={`${action.flow?.slug}-bg badge min-w-[50px] rounded-r-none `}
+					className={`${action.flow?.slug}-bg badge rounded-r-none w-full`}
 					onClick={() => {
 						setShowFlows(!showFlows);
 						setShowTags(false);
@@ -383,7 +445,7 @@ function HeadMenu({
 			</div>
 			<div className="relative">
 				<button
-					className={`${action.tag?.slug}-bg badge min-w-[50px] rounded-none `}
+					className={`${action.tag?.slug}-bg badge rounded-none w-full`}
 					onClick={() => {
 						setShowTags(!showTags);
 						setShowFlows(false);
@@ -403,7 +465,7 @@ function HeadMenu({
 			</div>
 			<div className="relative">
 				<button
-					className={`${action.step?.slug}-bg badge min-w-[50px] rounded-l-none `}
+					className={`${action.step?.slug}-bg badge rounded-l-none w-full`}
 					onClick={() => {
 						setShowSteps(!showSteps);
 						setShowFlows(false);
