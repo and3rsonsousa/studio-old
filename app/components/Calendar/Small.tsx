@@ -10,9 +10,14 @@ export default function SmallCalendar({
 }) {
 	const { monthFull } = CalendarData(today);
 	return (
-		<div className="p-2 font-light text-gray-700 bg-white rounded-lg shadow-lg w-36 shadow-gray-400/50 text-xxx">
+		<div className="font-light text-gray-700 bg-white rounded-lg shadow-lg w-36 shadow-gray-400/50 text-xxx">
+			<div className="grid grid-cols-7 p-1 pb-1 mb-1 text-center border-b">
+				{["D", "S", "T", "Q", "Q", "S", "S"].map((item) => (
+					<div className="px-1 text-gray-700 py-0.5">{item}</div>
+				))}
+			</div>
 			{monthFull.map((week) => (
-				<div className="grid grid-cols-7">
+				<div className="grid grid-cols-7 px-1">
 					{week.map((day: any) => (
 						<div
 							className={`px-1 py-0.5 ${

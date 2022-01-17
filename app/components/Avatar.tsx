@@ -19,11 +19,7 @@ export default function Avatar({
 	url?: string;
 }) {
 	return avatar ? (
-		<motion.div
-			layout
-			transition={{ ease: "easeOut" }}
-			className={_className ? _className : undefined}
-		>
+		<div className={_className ? _className : undefined}>
 			<div
 				onClick={() => {
 					if (url) location.replace(url);
@@ -73,6 +69,6 @@ export default function Avatar({
 					</span>
 				)}
 			</div>
-		</motion.div>
+		</div>
 	) : null;
 }

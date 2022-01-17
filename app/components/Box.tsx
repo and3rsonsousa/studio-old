@@ -25,7 +25,7 @@ const Box = ({
 	isValidating: Boolean;
 }) => {
 	return actions.length > 0 ? (
-		<div className="mb-8 snap-start">
+		<div className="mb-8">
 			<div className="flex items-center justify-between mb-4 space-x-4">
 				<div className="prose">
 					<h3 className="whitespace-nowrap ">{title}</h3>
@@ -41,7 +41,7 @@ const Box = ({
 				</div>
 			</div>
 
-			<div className="page-over">
+			<div>
 				<div className="grid items-start gap-2 md:gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xxl:grid-cols-6 xxxl:grid-cols-8">
 					{actions.map(
 						(action: IAction) =>

@@ -7,14 +7,11 @@ import "dayjs/locale/pt-br";
 import { isLate } from "~/utils/functions";
 import {
 	HiCheck,
-	HiChevronLeft,
-	HiChevronRight,
 	HiOutlineCheckCircle,
 	HiOutlineDotsHorizontal,
 	HiOutlineMinusCircle,
 	HiOutlinePencilAlt,
 	HiOutlineX,
-	HiOutlineXCircle,
 } from "react-icons/hi";
 import { BiDuplicate } from "react-icons/bi";
 import Avatar from "../Avatar";
@@ -225,136 +222,124 @@ export default ({
 	};
 
 	return (
-		<AnimatePresence>
-			<motion.div
-				layout
-				transition={{ ease: "easeOut" }}
-				className={`action-${
-					action.step?.slug
-				}-bg relative rounded-lg ${
-					big ? "p-4" : "p-2 pl-4 "
-				} origin-top  ${
-					action.validating ? " scale-90 opacity-25" : ""
-				}`}
-			>
-				<div className="flex space-x-2">
-					{/* Tag - Flow - Step */}
-					<HeadMenu
-						big={big}
-						steps={steps}
-						tags={tags}
-						flows={flows}
-						action={action}
-						updateFlow={updateFlow}
-						updateTag={updateTag}
-						updateStep={updateStep}
-					/>
-					{/* Menu Lateral */}
-					<div className="relative group">
-						<button className="p-1 button button-ghost">
-							<HiOutlineDotsHorizontal />
+		<div
+			className={`action-${action.step?.slug}-bg relative rounded-lg ${
+				big ? "p-4" : "p-2 pl-4 "
+			} origin-top  ${action.validating ? " scale-90 opacity-25" : ""}`}
+		>
+			<div className="flex space-x-2">
+				{/* Tag - Flow - Step */}
+				<HeadMenu
+					big={big}
+					steps={steps}
+					tags={tags}
+					flows={flows}
+					action={action}
+					updateFlow={updateFlow}
+					updateTag={updateTag}
+					updateStep={updateStep}
+				/>
+				{/* Menu Lateral */}
+				<div className="relative group">
+					<button className="p-1 button button-ghost">
+						<HiOutlineDotsHorizontal />
+					</button>
+					<div className="absolute top-0 right-0 flex invisible text-xl transition-all duration-300 scale-90 translate-x-4 bg-gray-900 rounded-lg shadow-xl opacity-0 shadow-gray-800/50 transform-cpu group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 group-hover:scale-100">
+						{/* Editar a Ação */}
+						<button className="px-2 py-1 rounded-r-none button button-invert button-ghost">
+							<HiOutlinePencilAlt />
 						</button>
-						<div className="absolute top-0 right-0 flex invisible text-xl transition-all duration-300 scale-90 translate-x-4 bg-gray-900 rounded-lg shadow-xl opacity-0 shadow-gray-800/50 transform-cpu group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 group-hover:scale-100">
-							{/* Editar a Ação */}
-							<button className="px-2 py-1 rounded-r-none button button-invert button-ghost">
-								<HiOutlinePencilAlt />
-							</button>
 
-							{/* Selecionar ação/Action */}
-							<button
-								className="px-2 py-1 rounded-none button button-invert button-ghost"
-								onClick={() => {
-									setSelectedActions((old: string[]) => {
-										return selected
-											? old.filter(
-													(item) => item !== action.id
-											  )
-											: [...old, action.id];
-									});
-								}}
-							>
-								{selected ? (
-									<HiOutlineMinusCircle />
-								) : (
-									<HiOutlineCheckCircle />
-								)}
-							</button>
-							{/* Duplicar ação/Action */}
-							<button className="px-2 py-1 rounded-none button button-invert button-ghost">
-								<BiDuplicate />
-							</button>
-							{/* Exclui/Deleta a ação/Action */}
-							<button
-								onClick={() => deleteAction(action.id)}
-								className="px-2 py-1 rounded-l-none button button-invert button-ghost"
-							>
-								<HiOutlineX />
-							</button>
-						</div>
+						{/* Selecionar ação/Action */}
+						<button
+							className="px-2 py-1 rounded-none button button-invert button-ghost"
+							onClick={() => {
+								setSelectedActions((old: string[]) => {
+									return selected
+										? old.filter(
+												(item) => item !== action.id
+										  )
+										: [...old, action.id];
+								});
+							}}
+						>
+							{selected ? (
+								<HiOutlineMinusCircle />
+							) : (
+								<HiOutlineCheckCircle />
+							)}
+						</button>
+						{/* Duplicar ação/Action */}
+						<button className="px-2 py-1 rounded-none button button-invert button-ghost">
+							<BiDuplicate />
+						</button>
+						{/* Exclui/Deleta a ação/Action */}
+						<button
+							onClick={() => deleteAction(action.id)}
+							className="px-2 py-1 rounded-l-none button button-invert button-ghost"
+						>
+							<HiOutlineX />
+						</button>
 					</div>
 				</div>
-				{/* Nome da Ação */}
-				<ContentEditable
-					html={name.current}
-					onChange={(event) =>
-						(name.current = event?.target.value
-							.replace(/(<([^>]+)>)/gi, "")
-							.toString())
-					}
-					className={`${
-						big ? "text-lg font-medium" : "text-sm"
-					} leading-tight p-0 pb-1 hover:border-gray-200 focus:outline-none w-full border-b-2 border-b-transparent resize-none`}
-					onBlur={() => {
-						action.name !== name.current
-							? updateName(action.id)
-							: null;
+			</div>
+			{/* Nome da Ação */}
+			<ContentEditable
+				html={name.current}
+				onChange={(event) =>
+					(name.current = event?.target.value
+						.replace(/(<([^>]+)>)/gi, "")
+						.toString())
+				}
+				className={`${
+					big ? "text-lg font-medium" : "text-sm"
+				} leading-tight p-0 pb-1 hover:border-gray-200 focus:outline-none w-full border-b-2 border-b-transparent resize-none`}
+				onBlur={() => {
+					action.name !== name.current ? updateName(action.id) : null;
+				}}
+			/>
+			{/* Descrição */}
+			{/* Caso seja big, visualização grande, mostra 3 linhas da mesma */}
+			{big && action.description && (
+				<div className={`text-sm mt-1 line-clamp-3 text-gray-600`}>
+					{action.description}
+				</div>
+			)}
+			{big && action.start ? (
+				<div className={`${big ? "mt-2" : "mt-1"}`}>
+					<div className="text-sm text-gray-600">
+						{action.start.format("D [de] MMMM")}{" "}
+						{action.time
+							? action.time.format(", [às] HH[h]mm")
+							: ""}
+					</div>
+					<div className="flex items-center space-x-2">
+						{isLate(action) && (
+							<div className="w-2 h-2 rounded-full animate-pulse bg-semantic-error"></div>
+						)}
+						<StartEndDate action={action} updateDate={updateDate} />
+					</div>
+				</div>
+			) : null}
+
+			{selected && (
+				<button
+					className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 translate-x-1/2 -translate-y-1/2 rounded-full bg-interdimensional"
+					onClick={() => {
+						setSelectedActions((old: string[]) => {
+							return old.filter((item) => item !== action.id);
+						});
 					}}
-				/>
-				{/* Descrição */}
-				{/* Caso seja big, visualização grande, mostra 3 linhas da mesma */}
-				{big && action.description && (
-					<div className={`text-sm mt-1 line-clamp-3 text-gray-600`}>
-						{action.description}
-					</div>
-				)}
-				{big && action.start ? (
-					<div className={`${big ? "mt-2" : "mt-1"}`}>
-						<div className="text-sm text-gray-600">
-							{action.start.format("D [de] MMMM")}{" "}
-							{action.time
-								? action.time.format(", [às] HH[h]mm")
-								: ""}
-						</div>
-						<div className="flex items-center space-x-2">
-							{isLate(action) && (
-								<div className="w-2 h-2 rounded-full animate-pulse bg-semantic-error"></div>
-							)}
-							<StartEndDate
-								action={action}
-								updateDate={updateDate}
-							/>
-						</div>
-					</div>
-				) : null}
+				>
+					<HiCheck className="text-xl text-white" />
+				</button>
+			)}
 
-				{selected && (
-					<button
-						className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 translate-x-1/2 -translate-y-1/2 rounded-full bg-interdimensional"
-						onClick={() => {
-							setSelectedActions((old: string[]) => {
-								return old.filter((item) => item !== action.id);
-							});
-						}}
-					>
-						<HiCheck className="text-xl text-white" />
-					</button>
-				)}
+			<div
+				className={`absolute bottom-0 left-0 w-full h-1 rounded-b-lg ${action.step?.slug}-bg`}
+			></div>
 
-				<div
-					className={`absolute bottom-0 left-0 w-full h-1 rounded-b-lg ${action.step?.slug}-bg`}
-				></div>
-
-				{/* <div className="absolute bottom-0 left-0 flex w-full h-1 overflow-hidden rounded-b">
+			{/* <div className="absolute bottom-0 left-0 flex w-full h-1 overflow-hidden rounded-b">
 					{steps.map((step: IBasic) => (
 						<div
 							key={step.id}
@@ -367,30 +352,29 @@ export default ({
 					))}
 				</div> */}
 
-				<div className="absolute left-0 -translate-x-1/2 top-3">
-					<Avatar avatar={action.account} small={true} />
-					<Avatar
-						avatar={action.profile_responsible}
-						small={true}
-						border={true}
-						_className="-mt-1"
-						url={`/dashboard/profiles/${action.profile_responsible?.id}`}
-					/>
-				</div>
+			<div className="absolute left-0 -translate-x-1/2 top-3">
+				<Avatar avatar={action.account} small={true} />
+				<Avatar
+					avatar={action.profile_responsible}
+					small={true}
+					border={true}
+					_className="-mt-1"
+					url={`/dashboard/profiles/${action.profile_responsible?.id}`}
+				/>
+			</div>
 
-				{action.validating && (
-					<motion.div
-						initial={{ scale: 2, opacity: 0 }}
-						animate={{ scale: 1, opacity: 1 }}
-						exit={{ scale: 2, opacity: 0 }}
-						transition={{ animate: { duration: 500 } }}
-						className="absolute inset-0 grid place-items-center"
-					>
-						<div className="w-6 h-6 border-4 rounded-full border-interdimensional animate-spin border-t-gray-100"></div>
-					</motion.div>
-				)}
-			</motion.div>
-		</AnimatePresence>
+			{action.validating && (
+				<motion.div
+					initial={{ scale: 2, opacity: 0 }}
+					animate={{ scale: 1, opacity: 1 }}
+					exit={{ scale: 2, opacity: 0 }}
+					transition={{ animate: { duration: 500 } }}
+					className="absolute inset-0 grid place-items-center"
+				>
+					<div className="w-6 h-6 border-4 rounded-full border-interdimensional animate-spin border-t-gray-100"></div>
+				</motion.div>
+			)}
+		</div>
 	);
 };
 
@@ -652,8 +636,8 @@ function StartEndDate({
 								exit={{ scale: 0.9, opacity: 0 }}
 							>
 								<SmallCalendar
-									today={action.start}
-									callback={handleStart}
+									today={action.end}
+									callback={handleEnd}
 								/>
 							</motion.div>
 						)}
