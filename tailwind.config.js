@@ -38,8 +38,9 @@ module.exports = {
 			},
 			account: colors.violet,
 			planning: colors.blue,
-			copy: colors.emerald,
-			creative: colors.lime,
+			copy: colors.teal,
+			creative: colors.green,
+			financial: colors.lime,
 
 			idea: colors.yellow,
 			do: colors.orange,

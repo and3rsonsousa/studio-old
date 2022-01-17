@@ -111,6 +111,9 @@ body {
 	@apply transition duration-300 bg-white border hover:border-accomplished-500 hover:ring-4 hover:ring-accomplished-500/30;
 }
 
+.account-bg {
+	@apply text-white transition bg-account-600 hover:bg-account-800;
+}
 .planning-bg {
 	@apply text-white transition bg-planning-500 hover:bg-planning-600;
 }
@@ -120,8 +123,8 @@ body {
 .creative-bg {
 	@apply text-white transition bg-creative-500 hover:bg-creative-700;
 }
-.account-bg {
-	@apply text-white transition bg-account-600 hover:bg-account-800;
+.financial-bg {
+	@apply text-white transition bg-financial-400 hover:bg-financial-600;
 }
 
 .post-bg {

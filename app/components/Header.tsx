@@ -88,6 +88,7 @@ const Header = ({
 					profile={profile}
 					flows={flows}
 					microPopup={microPopup}
+					showMicroPopup={showMicroPopup}
 					profiles={profiles}
 					steps={steps}
 					tags={tags}

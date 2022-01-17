@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { Link, redirect } from "remix";
 import { IAccount, IUser } from "~/types";
 
 export default function Avatar({
@@ -27,7 +26,6 @@ export default function Avatar({
 		>
 			<div
 				onClick={() => {
-					console.log(url);
 					if (url) location.replace(url);
 				}}
 				className={` ${

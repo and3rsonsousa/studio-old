@@ -7,6 +7,7 @@ import {
 	HiOutlineUser,
 	HiOutlineUsers,
 } from "react-icons/hi";
+import { BsCurrencyDollar } from "react-icons/bs";
 import { Link } from "remix";
 import { IUser } from "~/types";
 import Avatar from "./Avatar";
@@ -137,6 +138,12 @@ export default ({ user }: { user: IUser }) => {
 							name: "Usuários",
 							slug: "profiles",
 							icon: <HiOutlineUsers className="text-lg" />,
+						},
+						{
+							id: 3,
+							name: "Financeiro",
+							slug: "bills",
+							icon: <BsCurrencyDollar className="text-lg" />,
 						},
 					].map((item) => (
 						<Link

@@ -1,4 +1,6 @@
-interface IUser {
+import { Dayjs } from "dayjs";
+
+export interface IUser {
 	id: string;
 	name?: string;
 	username?: string;
@@ -9,7 +11,7 @@ interface IUser {
 	role?: string;
 }
 
-interface IAccount {
+export interface IAccount {
 	id: string;
 	name: string;
 	slug: string;
@@ -19,7 +21,7 @@ interface IAccount {
 	image?: { url: string };
 }
 
-interface IAction {
+export interface IAction {
 	id: string;
 	name: string;
 	description?: string;
@@ -27,13 +29,14 @@ interface IAction {
 	account: IAccount;
 	start?: any;
 	end?: any;
+	time?: any;
 	step?: IBasic;
 	flow?: IBasic;
 	tag?: IBasic;
 	validating?: Boolean;
 }
 
-interface ICampaign {
+export interface ICampaign {
 	id: string;
 	name: string;
 	briefing?: string;
@@ -45,13 +48,13 @@ interface ICampaign {
 	flow?: IBasic;
 }
 
-interface IBasic {
+export interface IBasic {
 	id: string;
 	name: string;
 	slug?: string;
 }
 
-interface IDashboardIndex {
+export interface IDashboardIndex {
 	campaigns: ICampaign[];
 	header_profile: IUser;
 	profile: IUser;
@@ -61,4 +64,11 @@ interface IDashboardIndex {
 	flows: IBasic[];
 }
 
-export type { IUser, IAccount, IAction, ICampaign, IBasic, IDashboardIndex };
+export interface IBill {
+	id: string;
+	name: string;
+	description: string;
+	nature: string;
+	date: Dayjs;
+	value: number;
+}

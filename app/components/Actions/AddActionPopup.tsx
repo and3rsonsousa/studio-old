@@ -35,15 +35,15 @@ const menu = {
 const item = {
 	initial: {
 		opacity: 0,
-		x: 100,
+		scale: 0.9,
 	},
 	animate: {
 		opacity: 1,
-		x: 0,
+		scale: 1,
 	},
 	exit: {
 		opacity: 0,
-		x: 100,
+		scale: 0.9,
 	},
 	transition: {
 		ease: "easeOut",
@@ -52,6 +52,7 @@ const item = {
 
 export default function AddActionPopup({
 	microPopup,
+	showMicroPopup,
 	profile,
 	accounts,
 	profiles,
@@ -63,6 +64,7 @@ export default function AddActionPopup({
 	mutate,
 }: {
 	microPopup: Boolean;
+	showMicroPopup: Function;
 	profile: IUser;
 	accounts: IAccount[];
 	profiles: IUser[];
@@ -85,14 +87,13 @@ export default function AddActionPopup({
 		step: steps[0].id,
 		tag: tags[0].id,
 		image: "",
-		start: start
-			? start
-			: dayjs()
-					.set("h", 11)
-					.set("m", 12)
-					.set("s", Math.ceil(Math.random() * 50))
-					.format("YYYY-MM-DD[T]HH:mm:ss[-03:00]"),
+		start: start ? start : dayjs().format("YYYY-MM-DD"),
 		end: "",
+		time: dayjs()
+			.set("h", 11)
+			.set("m", 12)
+			.set("s", Math.ceil(Math.random() * 50))
+			.format("HH:mm:ss"),
 		campaign: "",
 	};
 
@@ -104,10 +105,12 @@ export default function AddActionPopup({
 		step: true,
 		tag: true,
 		start: true,
+		time: true,
 	};
 
 	const [action, setAction] = useState(emptyAction);
 	const [virgin, setVirgin] = useState(emptyVirgin);
+	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState({ field: "", message: "" });
 
 	let errors = {
@@ -144,20 +147,23 @@ export default function AddActionPopup({
 		if (errors.name(true)) return false;
 		if (errors.account(true)) return false;
 
+		setLoading(true);
+
 		const mutateRequest = await request(
 			"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master",
 			gql`
 				mutation (
 					$name: String!
 					$description: String!
-					$start: String!
 					$account: ID!
 					$profile_creator: ID!
 					$profile_responsible: ID!
 					$flow: ID!
 					$step: ID!
 					$tag: ID!
+					$start: String!
 					$end: String!
+					$time: String!
 				) {
 					createAction(
 						data: {
@@ -165,6 +171,7 @@ export default function AddActionPopup({
 							description: $description
 							start: $start
 							end: $end
+							time: $time
 							account: { connect: { id: $account } }
 							profile_creator: {
 								connect: { id: $profile_creator }
@@ -185,24 +192,14 @@ export default function AddActionPopup({
 		);
 
 		mutate((data: IDashboardIndex) => {
-			// const account = data.profile.accounts?.filter(
-			// 	(account) => account.id === action.account
-			// )[0];
-
-			// let actions: Object[] | undefined = account?.actions;
-			// actions?.push(action);
-
-			// console.log({
-			// 	...data,
-			// 	profile: { accounts: { ...data.profile.accounts, account } },
-			// });
-
-			// let newData = { ...data };
 			return data;
 		});
 
 		setAction(() => {
 			setVirgin(() => emptyVirgin);
+			showfullPopup(false);
+			showMicroPopup(false);
+			setLoading(false);
 			return { ...emptyAction, start: dayjs().format("YYYY-MM-DD") };
 		});
 
@@ -226,6 +223,11 @@ export default function AddActionPopup({
 					animate={menu.animate}
 					exit={menu.exit}
 					transition={menu.transition}
+					onKeyDown={(event) => {
+						if (event.altKey && event.key === "Tab") {
+							showfullPopup(!fullPopup);
+						}
+					}}
 				>
 					<motion.h3
 						layout="position"
@@ -233,6 +235,13 @@ export default function AddActionPopup({
 					>
 						Nova Ação
 					</motion.h3>
+					{loading && (
+						<motion.div
+							layout
+							transition={item.transition}
+							className="absolute w-6 h-6 border-4 rounded-full top-4 right-4 border-interdimensional border-t-transparent animate-spin"
+						></motion.div>
+					)}
 					<div className="px-4 py-2 max-h-[70vh] overflow-y-auto lg:px-8 lg:py-4 overflow-x-hidden">
 						{error.field && (
 							<motion.div
@@ -696,15 +705,9 @@ export default function AddActionPopup({
 											onChange={(event) => {
 												setAction(() => ({
 													...action,
-													start:
-														dayjs(
-															event.target.value
-														).format("YYYY-MM-DD") +
-														"T" +
-														dayjs(
-															action.start
-														).format("HH:mm:ss") +
-														"-03:00",
+													start: dayjs(
+														event.target.value
+													).format("YYYY-MM-DD"),
 												}));
 											}}
 										/>
@@ -714,19 +717,11 @@ export default function AddActionPopup({
 											className={`${
 												fullPopup ? "" : "mt-2"
 											} input`}
-											value={dayjs(action.start).format(
-												"HH:mm:ss"
-											)}
+											value={action.time}
 											onChange={(event) => {
 												setAction(() => ({
 													...action,
-													start:
-														dayjs(
-															action.start
-														).format("YYYY-MM-DD") +
-														"T" +
-														event.target.value +
-														"-03:00",
+													time: event.target.value,
 												}));
 											}}
 										/>

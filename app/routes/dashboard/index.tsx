@@ -11,6 +11,7 @@ import Box from "~/components/Box";
 import Legendas from "~/components/Legendas";
 import BoxCampaigns from "~/components/BoxCampaigns";
 import useSWR from "swr";
+import { CalendarData } from "~/utils/calendar";
 
 export const loader: LoaderFunction = async ({ request }) => {
 	//Retorna dos dados das Actions que estão nas Accounts que o usuário tem acesso
@@ -115,7 +116,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 	let serverData = await getData(request, QUERY);
 
 	return {
-		serverData,
 		QUERY,
 		fallback: {
 			"/dashboard/index": serverData,

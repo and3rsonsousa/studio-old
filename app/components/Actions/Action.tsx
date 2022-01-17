@@ -22,6 +22,7 @@ import request, { gql } from "graphql-request";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useState } from "react";
 import ContentEditable from "react-contenteditable";
+import SmallCalendar from "../Calendar/Small";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -157,10 +158,77 @@ export default ({
 		return mutateRequest;
 	};
 
+	const updateDate = async (
+		id: string,
+		date: { start: string; end: string; time: string }
+	) => {
+		mutate((data: any) => {
+			return newData(data, action, {
+				start: date.start,
+				end: date.end,
+				time: date.time,
+			});
+		}, false);
+
+		const mutateRequest = await request(
+			"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master",
+			gql`
+				mutation (
+					$start: String!
+					$end: String!
+					$time: String!
+					$id: ID!
+				) {
+					updateAction(
+						where: { id: $id }
+						data: { start: $start, end: $end, time: $time }
+					) {
+						id
+					}
+				}
+			`,
+			{
+				id,
+				start: date.start,
+				end: date.end,
+				time: date.time,
+			}
+		);
+
+		mutate();
+
+		return mutateRequest;
+	};
+
+	const deleteAction = async (id: string) => {
+		mutate((data: any) => {
+			return newData(data, action);
+		}, false);
+
+		const mutateRequest = await request(
+			"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master",
+			gql`
+				mutation ($id: ID!) {
+					deleteAction(where: { id: $id }) {
+						id
+					}
+				}
+			`,
+			{
+				id,
+			}
+		);
+
+		mutate();
+
+		return mutateRequest;
+	};
+
 	return (
 		<AnimatePresence>
 			<motion.div
 				layout
+				transition={{ ease: "easeOut" }}
 				className={`action-${
 					action.step?.slug
 				}-bg relative rounded-lg ${
@@ -181,7 +249,7 @@ export default ({
 						updateTag={updateTag}
 						updateStep={updateStep}
 					/>
-
+					{/* Menu Lateral */}
 					<div className="relative group">
 						<button className="p-1 button button-ghost">
 							<HiOutlineDotsHorizontal />
@@ -215,30 +283,17 @@ export default ({
 							<button className="px-2 py-1 rounded-none button button-invert button-ghost">
 								<BiDuplicate />
 							</button>
-							{/* Excluir ação/Action */}
-							<button className="px-2 py-1 rounded-l-none button button-invert button-ghost">
+							{/* Exclui/Deleta a ação/Action */}
+							<button
+								onClick={() => deleteAction(action.id)}
+								className="px-2 py-1 rounded-l-none button button-invert button-ghost"
+							>
 								<HiOutlineX />
 							</button>
 						</div>
 					</div>
 				</div>
 				{/* Nome da Ação */}
-				{/* <textarea
-					className={`${
-						big ? "text-lg font-medium" : "text-sm"
-					} leading-tight p-0  pr-6 hover:ring rounded-lg focus:ring-interdimensional w-full border-0 resize-none`}
-					onChange={(event) => {
-						event.target.style.height = "1px";
-						event.target.style.height =
-							event.target.scrollHeight + "px";
-						setName(() => event?.target.value);
-					}}
-					onBlur={() =>
-						action.name !== name ? updateName(action.id) : null
-					}
-					defaultValue={name}
-					rows={Math.floor(name.length / 16) || 1}
-				></textarea> */}
 				<ContentEditable
 					html={name.current}
 					onChange={(event) =>
@@ -248,16 +303,15 @@ export default ({
 					}
 					className={`${
 						big ? "text-lg font-medium" : "text-sm"
-					} leading-tight p-0  pr-6 hover:ring rounded-lg focus:ring-interdimensional w-full border-0 resize-none`}
+					} leading-tight p-0  pr-6 hover:ring hover:ring-interdimensional/30 rounded-lg focus:ring-interdimensional focus:outline-none w-full border-0 resize-none`}
 					onBlur={() => {
 						action.name !== name.current
 							? updateName(action.id)
 							: null;
 					}}
 				/>
-
-				<div>{name.current}</div>
-
+				{/* Descrição */}
+				{/* Caso seja big, visualização grande, mostra 3 linhas da mesma */}
 				{big && action.description && (
 					<div className={`text-sm mt-2 line-clamp-3 text-gray-600`}>
 						{action.description}
@@ -266,21 +320,19 @@ export default ({
 				{big && action.start ? (
 					<div className={`${big ? "mt-2" : "mt-1"}`}>
 						<div className="text-sm text-gray-600">
-							{action.start.format("D [de] MMMM[, às] H[h]mm")}
+							{action.start.format("D [de] MMMM")}{" "}
+							{action.time
+								? action.time.format(", [às] HH[h]mm")
+								: ""}
 						</div>
-						<div className="flex items-center space-x-2 font-medium tracking-wide text-gray-400 uppercase text-xxx">
+						<div className="flex items-center space-x-2">
 							{isLate(action) && (
 								<div className="w-2 h-2 rounded-full animate-pulse bg-semantic-error"></div>
 							)}
-							<div>
-								{action.end && "início "}
-								{action.start.fromNow()}
-							</div>
-							{action.end && (
-								<div className="inline-block ">
-									entrega {action.end.fromNow()}
-								</div>
-							)}
+							<StartEndDate
+								action={action}
+								updateDate={updateDate}
+							/>
 						</div>
 					</div>
 				) : null}
@@ -298,7 +350,11 @@ export default ({
 					</button>
 				)}
 
-				<div className="absolute bottom-0 left-0 flex w-full h-1 overflow-hidden rounded-b">
+				<div
+					className={`absolute bottom-0 left-0 w-full h-1 rounded-b-lg ${action.step?.slug}-bg`}
+				></div>
+
+				{/* <div className="absolute bottom-0 left-0 flex w-full h-1 overflow-hidden rounded-b">
 					{steps.map((step: IBasic) => (
 						<div
 							key={step.id}
@@ -309,35 +365,7 @@ export default ({
 							}`}
 						></div>
 					))}
-				</div>
-				{/* <div className="absolute bottom-0 left-0 w-full h-8 overflow-hidden rounded-b-lg group">
-					<div className="absolute bottom-0 left-0 flex w-full h-1 transition-all group-hover:h-8 ">
-						{steps.map((step: IBasic) => (
-							<button
-								key={step.id}
-								className={`${step.slug}-bg ${
-									step.slug === action.step?.slug
-										? " w-full "
-										: " w-8 "
-								} hover:w-full transition-all uppercase text-xxx tracking-wide font-medium overflow-hidden duration-300 text-center`}
-								// onClick={() => updateStep(action.id, step)}
-							>
-								<div
-									className={`w-full p-2 h-8 transition duration-500 ${
-										step.slug === action.step?.slug
-											? ""
-											: "opacity-0 hover:opacity-100"
-									}`}
-								>
-									{step.name}
-								</div>
-							</button>
-						))}
-					</div>
 				</div> */}
-				{/* <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap">
-								 {step.name}
-							 </div>  */}
 
 				<div className="absolute left-0 -translate-x-1/2 top-3">
 					<Avatar avatar={action.account} small={true} />
@@ -366,7 +394,7 @@ export default ({
 	);
 };
 
-function newData(data: any, action: IAction, value: any) {
+function newData(data: any, action: IAction, value?: any) {
 	const accounts = data.profile.accounts || [];
 	const accountIndex =
 		data.profile.accounts?.findIndex(
@@ -379,15 +407,19 @@ function newData(data: any, action: IAction, value: any) {
 	const actionIndex =
 		actions.findIndex((_action: any) => _action.id === action.id) || 0;
 
-	const oldAction = actions[actionIndex];
-	const newAction = Object.assign(
-		oldAction,
-		{ validating: true },
-		{ ...value }
-	);
+	let _data = data;
+	if (value) {
+		const oldAction = actions[actionIndex];
+		const newAction = Object.assign(
+			oldAction,
+			{ validating: true },
+			{ ...value }
+		);
 
-	const _data = data;
-	_data.profile.accounts[accountIndex].actions[actionIndex] = newAction;
+		_data.profile.accounts[accountIndex].actions[actionIndex] = newAction;
+	} else {
+		_data.profile.accounts[accountIndex].actions.splice(actionIndex, 1);
+	}
 
 	return _data;
 }
@@ -425,14 +457,14 @@ function HeadMenu({
 		<div className="relative grid grid-cols-3 mb-2">
 			<div className="relative">
 				<button
-					className={`${action.flow?.slug}-bg badge rounded-r-none w-full`}
+					className={`bg-gray-200 ${action.flow?.slug}-bg badge rounded-r-none w-full`}
 					onClick={() => {
 						setShowFlows(!showFlows);
 						setShowTags(false);
 						setShowSteps(false);
 					}}
 				>
-					{big ? action.flow?.name : ""}
+					{big ? (action.flow ? action.flow.name : "...") : ""}
 				</button>
 				<SubMenu
 					actionItem={action.flow}
@@ -445,14 +477,14 @@ function HeadMenu({
 			</div>
 			<div className="relative">
 				<button
-					className={`${action.tag?.slug}-bg badge rounded-none w-full`}
+					className={`bg-gray-200 ${action.tag?.slug}-bg badge rounded-none w-full`}
 					onClick={() => {
 						setShowTags(!showTags);
 						setShowFlows(false);
 						setShowSteps(false);
 					}}
 				>
-					{big ? action.tag?.name : ""}
+					{big ? (action.tag ? action.tag.name : "...") : ""}
 				</button>
 				<SubMenu
 					actionItem={action.tag}
@@ -465,14 +497,14 @@ function HeadMenu({
 			</div>
 			<div className="relative">
 				<button
-					className={`${action.step?.slug}-bg badge rounded-l-none w-full`}
+					className={`bg-gray-200 ${action.step?.slug}-bg badge rounded-l-none w-full`}
 					onClick={() => {
 						setShowSteps(!showSteps);
 						setShowFlows(false);
 						setShowTags(false);
 					}}
 				>
-					{big ? action.step?.name : ""}
+					{big ? (action.step ? action.step.name : "...") : ""}
 				</button>
 				<SubMenu
 					actionItem={action.step}
@@ -509,7 +541,7 @@ function SubMenu({
 					initial={{ scale: 0.9, opacity: 0 }}
 					animate={{ scale: 1, opacity: 1 }}
 					exit={{ scale: 0.9, opacity: 0 }}
-					className={`absolute left-0 z-10 p-2 origin-top bg-white border rounded-lg shadow-lg shadow-gray-300 top-8 ${
+					className={`absolute left-0 z-10 p-2 origin-top-left bg-white border rounded-lg shadow-lg shadow-gray-400/50 top-8 ${
 						items.length > 7
 							? "grid grid-cols-3 w-80"
 							: items.length > 4
@@ -522,7 +554,7 @@ function SubMenu({
 							item.slug !== actionItem?.slug && (
 								<button
 									key={index}
-									className="flex items-center justify-start w-full p-2 space-x-2 text-xs font-medium tracking-wider text-gray-500 uppercase rounded-lg hover:bg-gray-200"
+									className="flex items-center justify-start w-full p-2 space-x-1 font-medium tracking-wider text-gray-500 uppercase rounded-lg text-xx hover:bg-gray-100"
 									onClick={() => {
 										update(action?.id, item);
 										closeAll();
@@ -531,12 +563,103 @@ function SubMenu({
 									<div
 										className={`w-2 h-2 rounded-full ${item.slug}-bg`}
 									></div>
-									<div>{item.name}</div>
+									<div className="overflow-hidden text-ellipsis">
+										{item.name}
+									</div>
 								</button>
 							)
 					)}
 				</motion.div>
 			)}
 		</AnimatePresence>
+	);
+}
+
+function StartEndDate({
+	action,
+	updateDate,
+}: {
+	action: IAction;
+	updateDate: Function;
+}) {
+	const [start, setStart] = useState(false);
+	const [end, setEnd] = useState(false);
+
+	const handleStart = (value: string) => {
+		updateDate(action.id, {
+			start: value || "",
+			end: action.end || "",
+			time: action.time || "",
+		});
+		setStart(false);
+	};
+
+	const handleEnd = (value: string) => {
+		updateDate(action.id, {
+			start: action.start || "",
+			end: value || "",
+			time: action.time || "",
+		});
+		setEnd(false);
+	};
+
+	return (
+		<>
+			<div
+				className="relative"
+				onClick={() => {
+					setEnd(false);
+					setStart(!start);
+				}}
+			>
+				<div className="font-medium tracking-wide text-gray-400 uppercase transition-colors cursor-pointer hover:text-gray-700 text-xxx">
+					{action.end && "início "}
+					{action.start.fromNow()}
+				</div>
+				<AnimatePresence>
+					{start && (
+						<motion.div
+							className="absolute left-0 z-10 origin-top-left border rounded-lg top-4"
+							initial={{ scale: 0.9, opacity: 0 }}
+							animate={{ scale: 1, opacity: 1 }}
+							exit={{ scale: 0.9, opacity: 0 }}
+						>
+							<SmallCalendar
+								today={action.start}
+								callback={handleStart}
+							/>
+						</motion.div>
+					)}
+				</AnimatePresence>
+			</div>
+			{action.end && (
+				<div
+					className="relative"
+					onClick={() => {
+						setStart(false);
+						setEnd(!end);
+					}}
+				>
+					<div className="font-medium tracking-wide text-gray-400 uppercase transition-colors cursor-pointer hover:text-gray-700 text-xxx">
+						entrega {action.end.fromNow()}
+					</div>
+					<AnimatePresence>
+						{end && (
+							<motion.div
+								className="absolute left-0 z-10 origin-top-left border rounded-lg top-4"
+								initial={{ scale: 0.9, opacity: 0 }}
+								animate={{ scale: 1, opacity: 1 }}
+								exit={{ scale: 0.9, opacity: 0 }}
+							>
+								<SmallCalendar
+									today={action.start}
+									callback={handleStart}
+								/>
+							</motion.div>
+						)}
+					</AnimatePresence>
+				</div>
+			)}
+		</>
 	);
 }
