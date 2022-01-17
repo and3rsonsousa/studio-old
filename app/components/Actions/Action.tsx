@@ -303,7 +303,7 @@ export default ({
 					}
 					className={`${
 						big ? "text-lg font-medium" : "text-sm"
-					} leading-tight p-0  pr-6 hover:ring hover:ring-interdimensional/30 rounded-lg focus:ring-interdimensional focus:outline-none w-full border-0 resize-none`}
+					} leading-tight p-0 pb-1 hover:border-gray-200 focus:outline-none w-full border-b-2 border-b-transparent resize-none`}
 					onBlur={() => {
 						action.name !== name.current
 							? updateName(action.id)
@@ -313,7 +313,7 @@ export default ({
 				{/* Descrição */}
 				{/* Caso seja big, visualização grande, mostra 3 linhas da mesma */}
 				{big && action.description && (
-					<div className={`text-sm mt-2 line-clamp-3 text-gray-600`}>
+					<div className={`text-sm mt-1 line-clamp-3 text-gray-600`}>
 						{action.description}
 					</div>
 				)}
