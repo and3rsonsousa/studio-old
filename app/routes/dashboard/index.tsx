@@ -58,6 +58,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 						description
 						start
 						end
+						time
 						account{
 							id
 							name
@@ -167,6 +168,7 @@ export default () => {
 			...action,
 			start: action.start ? dayjs(action.start) : null,
 			end: action.end ? dayjs(action.end) : null,
+			time: action.time ? dayjs(action.start + action.time) : null,
 		};
 		//Insere na array de ações/Actions com data
 		if (newAction.start) {

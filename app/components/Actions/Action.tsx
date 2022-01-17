@@ -224,7 +224,7 @@ export default ({
 	return (
 		<div
 			className={`action-${action.step?.slug}-bg relative rounded-lg ${
-				big ? "p-4" : "p-2 pl-4 "
+				big ? "p-4 shadow-lg shadow-gray-300/50" : "p-2 pl-4 "
 			} origin-top  ${action.validating ? " scale-90 opacity-25" : ""}`}
 		>
 			<div className="flex space-x-2">
@@ -308,7 +308,7 @@ export default ({
 			{big && action.start ? (
 				<div className={`${big ? "mt-2" : "mt-1"}`}>
 					<div className="text-sm text-gray-600">
-						{action.start.format("D [de] MMMM")}{" "}
+						{action.start.format("D [de] MMMM")}
 						{action.time
 							? action.time.format(", [às] HH[h]mm")
 							: ""}
@@ -335,9 +335,9 @@ export default ({
 				</button>
 			)}
 
-			<div
+			{/* <div
 				className={`absolute bottom-0 left-0 w-full h-1 rounded-b-lg ${action.step?.slug}-bg`}
-			></div>
+			></div> */}
 
 			{/* <div className="absolute bottom-0 left-0 flex w-full h-1 overflow-hidden rounded-b">
 					{steps.map((step: IBasic) => (
@@ -598,7 +598,7 @@ function StartEndDate({
 			>
 				<div className="font-medium tracking-wide text-gray-400 uppercase transition-colors cursor-pointer hover:text-gray-700 text-xxx">
 					{action.end && "início "}
-					{action.start.fromNow()}
+					{action.time ? action.time.fromNow() : ""}
 				</div>
 				<AnimatePresence>
 					{start && (
