@@ -88,6 +88,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 							name
 							slug
 						}
+						campaign{
+							id
+							name
+							slug
+						}
 					}
 				}
 			}
@@ -95,6 +100,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 				id
 				name
 				role
+				image{
+					url(transformation: {image: {resize: {width: 54, height: 54, fit: clip}}})
+				}
 			}
 		
 			tags{
@@ -170,6 +178,7 @@ export default () => {
 			end: action.end ? dayjs(action.end) : null,
 			time: action.time ? dayjs(action.start + action.time) : null,
 		};
+
 		//Insere na array de ações/Actions com data
 		if (newAction.start) {
 			datedActions.push(newAction);
@@ -223,48 +232,48 @@ export default () => {
 					actions={todayActions}
 					steps={steps}
 					tags={tags}
+					profiles={profiles}
 					flows={flows}
 					selectedActions={selectedActions}
 					setSelectedActions={setSelectedActions}
 					message={"para hoje"}
 					mutate={mutate}
-					isValidating={isValidating}
 				/>
 				<Box
 					title="Ações Atrasadas"
 					actions={lateActions}
 					steps={steps}
 					tags={tags}
+					profiles={profiles}
 					flows={flows}
 					selectedActions={selectedActions}
 					setSelectedActions={setSelectedActions}
 					message={"atrasadas"}
 					mutate={mutate}
-					isValidating={isValidating}
 				/>
 				<Box
 					title="Próximas Ações"
 					actions={nextActions}
 					steps={steps}
 					tags={tags}
+					profiles={profiles}
 					flows={flows}
 					selectedActions={selectedActions}
 					setSelectedActions={setSelectedActions}
 					message={"para fazer"}
 					mutate={mutate}
-					isValidating={isValidating}
 				/>
 				<Box
 					title="Ações Sem Data"
 					actions={undatedActions}
 					steps={steps}
 					tags={tags}
+					profiles={profiles}
 					flows={flows}
 					selectedActions={selectedActions}
 					setSelectedActions={setSelectedActions}
 					message={"sem data"}
 					mutate={mutate}
-					isValidating={isValidating}
 				/>
 			</div>
 			<Outlet />

@@ -34,6 +34,7 @@ export interface IAction {
 	flow?: IBasic;
 	tag?: IBasic;
 	validating?: Boolean;
+	campaign: ICampaign;
 }
 
 export interface ICampaign {

@@ -1,4 +1,4 @@
-import { IAction, IBasic } from "~/types";
+import { IAction, IBasic, IUser } from "~/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
@@ -33,6 +33,7 @@ export default ({
 	flows,
 	steps,
 	tags,
+	profiles,
 	big = true,
 	selected = false,
 	setSelectedActions,
@@ -42,6 +43,7 @@ export default ({
 	flows: IBasic[];
 	steps: IBasic[];
 	tags: IBasic[];
+	profiles: IUser[];
 	big?: Boolean;
 	selected?: Boolean;
 	setSelectedActions: any;
@@ -197,6 +199,43 @@ export default ({
 		return mutateRequest;
 	};
 
+	const updateResponsible = async (
+		id: string,
+		profile_responsible: IUser
+	) => {
+		mutate((data: any) => {
+			return newData(data, action, {
+				profile_responsible,
+			});
+		}, false);
+
+		const mutateRequest = await request(
+			"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master",
+			gql`
+				mutation ($id: ID!, $profile_responsible: ID!) {
+					updateAction(
+						where: { id: $id }
+						data: {
+							profile_responsible: {
+								connect: { id: $profile_responsible }
+							}
+						}
+					) {
+						id
+					}
+				}
+			`,
+			{
+				id,
+				profile_responsible: profile_responsible.id,
+			}
+		);
+
+		mutate();
+
+		return mutateRequest;
+	};
+
 	const deleteAction = async (id: string) => {
 		mutate((data: any) => {
 			return newData(data, action);
@@ -283,6 +322,12 @@ export default ({
 					</div>
 				</div>
 			</div>
+			{/* Campanha */}
+			{action.campaign?.id && (
+				<div className="font-medium tracking-wide text-gray-500 uppercase text-xx">
+					{action.campaign.name}
+				</div>
+			)}
 			{/* Nome da Ação */}
 			<ContentEditable
 				html={name.current}
@@ -298,6 +343,7 @@ export default ({
 					action.name !== name.current ? updateName(action.id) : null;
 				}}
 			/>
+
 			{/* Descrição */}
 			{/* Caso seja big, visualização grande, mostra 3 linhas da mesma */}
 			{big && action.description && (
@@ -352,16 +398,11 @@ export default ({
 					))}
 				</div> */}
 
-			<div className="absolute left-0 -translate-x-1/2 top-3">
-				<Avatar avatar={action.account} small={true} />
-				<Avatar
-					avatar={action.profile_responsible}
-					small={true}
-					border={true}
-					_className="-mt-1"
-					url={`/dashboard/profiles/${action.profile_responsible?.id}`}
-				/>
-			</div>
+			<AvatarSide
+				action={action}
+				profiles={profiles}
+				updateResponsible={updateResponsible}
+			/>
 
 			{action.validating && (
 				<motion.div
@@ -569,19 +610,19 @@ function StartEndDate({
 	const [start, setStart] = useState(false);
 	const [end, setEnd] = useState(false);
 
-	const handleStart = (value: string) => {
+	const handleStart = (start: string, time: string) => {
 		updateDate(action.id, {
-			start: value || "",
+			start: start || "",
 			end: action.end || "",
-			time: action.time || "",
+			time: time || action.time || "",
 		});
 		setStart(false);
 	};
 
-	const handleEnd = (value: string) => {
+	const handleEnd = (end: string) => {
 		updateDate(action.id, {
 			start: action.start || "",
-			end: value || "",
+			end: end || "",
 			time: action.time || "",
 		});
 		setEnd(false);
@@ -589,14 +630,14 @@ function StartEndDate({
 
 	return (
 		<>
-			<div
-				className="relative"
-				onClick={() => {
-					setEnd(false);
-					setStart(!start);
-				}}
-			>
-				<div className="font-medium tracking-wide text-gray-400 uppercase transition-colors cursor-pointer hover:text-gray-700 text-xxx">
+			<div className="relative">
+				<div
+					className="font-medium tracking-wide text-gray-400 uppercase transition-colors cursor-pointer hover:text-gray-700 text-xxx"
+					onClick={() => {
+						setEnd(false);
+						setStart(!start);
+					}}
+				>
 					{action.end && "início "}
 					{action.time ? action.time.fromNow() : ""}
 				</div>
@@ -610,6 +651,7 @@ function StartEndDate({
 						>
 							<SmallCalendar
 								today={action.start}
+								time={action.time}
 								callback={handleStart}
 							/>
 						</motion.div>
@@ -617,14 +659,14 @@ function StartEndDate({
 				</AnimatePresence>
 			</div>
 			{action.end && (
-				<div
-					className="relative"
-					onClick={() => {
-						setStart(false);
-						setEnd(!end);
-					}}
-				>
-					<div className="font-medium tracking-wide text-gray-400 uppercase transition-colors cursor-pointer hover:text-gray-700 text-xxx">
+				<div className="relative">
+					<div
+						className="font-medium tracking-wide text-gray-400 uppercase transition-colors cursor-pointer hover:text-gray-700 text-xxx"
+						onClick={() => {
+							setStart(false);
+							setEnd(!end);
+						}}
+					>
 						entrega {action.end.fromNow()}
 					</div>
 					<AnimatePresence>
@@ -645,5 +687,62 @@ function StartEndDate({
 				</div>
 			)}
 		</>
+	);
+}
+
+function AvatarSide({
+	action,
+	profiles,
+	updateResponsible,
+}: {
+	action: IAction;
+	profiles: IUser[];
+	updateResponsible: Function;
+}) {
+	const [menu, setMenu] = useState(false);
+	return (
+		<div className="absolute left-0 -translate-x-1/2 z-90 top-3">
+			<Avatar avatar={action.account} small={true} />
+			<div className="-mt-1">
+				<div
+					onClick={() => setMenu(!menu)}
+					className="transition-transform rounded-full cursor-pointer hover:scale-125 transform-gpu"
+				>
+					<Avatar avatar={action.profile_responsible} small={true} />
+				</div>
+				<AnimatePresence>
+					{menu && (
+						<motion.div
+							initial={{ scale: 0.9, opacity: 0 }}
+							animate={{ scale: 1, opacity: 1 }}
+							exit={{ scale: 0.9, opacity: 0 }}
+							className="absolute grid grid-cols-2 gap-2 p-2 origin-top-left bg-white border rounded-lg shadow-lg min-w-max top-12 -left-3 shadow-gray-400/50 "
+						>
+							{profiles.map((profile: IUser) => (
+								<div
+									key={profile.id}
+									className="transition-transform rounded-full cursor-pointer hover:scale-125 transform-gpu"
+									onClick={() => {
+										setMenu(() => {
+											updateResponsible(
+												action.id,
+												profile
+											);
+											return false;
+										});
+									}}
+								>
+									<Avatar
+										avatar={profile}
+										small={true}
+										key={profile.id}
+									/>
+								</div>
+							))}
+						</motion.div>
+					)}
+				</AnimatePresence>
+			</div>
+		</div>
 	);
 }

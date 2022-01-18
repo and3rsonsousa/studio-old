@@ -151,43 +151,83 @@ export default function AddActionPopup({
 
 		const mutateRequest = await request(
 			"https://api-sa-east-1.graphcms.com/v2/ckxqxoluu0pol01xs5icyengz/master",
-			gql`
-				mutation (
-					$name: String!
-					$description: String!
-					$account: ID!
-					$profile_creator: ID!
-					$profile_responsible: ID!
-					$flow: ID!
-					$step: ID!
-					$tag: ID!
-					$start: String!
-					$end: String!
-					$time: String!
-				) {
-					createAction(
-						data: {
-							name: $name
-							description: $description
-							start: $start
-							end: $end
-							time: $time
-							account: { connect: { id: $account } }
-							profile_creator: {
-								connect: { id: $profile_creator }
+			action.campaign
+				? gql`
+						mutation (
+							$name: String!
+							$description: String!
+							$account: ID!
+							$profile_creator: ID!
+							$profile_responsible: ID!
+							$flow: ID!
+							$step: ID!
+							$tag: ID!
+							$start: String!
+							$end: String!
+							$time: String!
+							$campaign: ID!
+						) {
+							createAction(
+								data: {
+									name: $name
+									description: $description
+									start: $start
+									end: $end
+									time: $time
+									account: { connect: { id: $account } }
+									profile_creator: {
+										connect: { id: $profile_creator }
+									}
+									profile_responsible: {
+										connect: { id: $profile_responsible }
+									}
+									flow: { connect: { id: $flow } }
+									step: { connect: { id: $step } }
+									tag: { connect: { id: $tag } }
+									campaign: { connect: { id: $campaign } }
+								}
+							) {
+								id
 							}
-							profile_responsible: {
-								connect: { id: $profile_responsible }
-							}
-							flow: { connect: { id: $flow } }
-							step: { connect: { id: $step } }
-							tag: { connect: { id: $tag } }
 						}
-					) {
-						id
-					}
-				}
-			`,
+				  `
+				: gql`
+						mutation (
+							$name: String!
+							$description: String!
+							$account: ID!
+							$profile_creator: ID!
+							$profile_responsible: ID!
+							$flow: ID!
+							$step: ID!
+							$tag: ID!
+							$start: String!
+							$end: String!
+							$time: String!
+						) {
+							createAction(
+								data: {
+									name: $name
+									description: $description
+									start: $start
+									end: $end
+									time: $time
+									account: { connect: { id: $account } }
+									profile_creator: {
+										connect: { id: $profile_creator }
+									}
+									profile_responsible: {
+										connect: { id: $profile_responsible }
+									}
+									flow: { connect: { id: $flow } }
+									step: { connect: { id: $step } }
+									tag: { connect: { id: $tag } }
+								}
+							) {
+								id
+							}
+						}
+				  `,
 			action
 		);
 
@@ -197,9 +237,9 @@ export default function AddActionPopup({
 
 		setAction(() => {
 			setVirgin(() => emptyVirgin);
-			showfullPopup(false);
-			showMicroPopup(false);
-			setLoading(false);
+			showfullPopup(() => false);
+			showMicroPopup(() => false);
+			setLoading(() => false);
 			return { ...emptyAction, start: dayjs().format("YYYY-MM-DD") };
 		});
 

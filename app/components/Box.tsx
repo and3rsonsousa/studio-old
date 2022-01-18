@@ -1,28 +1,28 @@
-import { IAction, IBasic } from "~/types";
+import { IAction, IBasic, IUser } from "~/types";
 import Action from "./Actions/Action";
 
 const Box = ({
 	actions,
 	title,
+	flows,
 	steps,
 	tags,
-	flows,
+	profiles,
 	message,
 	selectedActions,
 	setSelectedActions,
 	mutate,
-	isValidating,
 }: {
 	actions: IAction[];
 	steps: IBasic[];
 	tags: IBasic[];
+	profiles: IUser[];
 	flows: IBasic[];
 	title: string;
 	message: string;
 	selectedActions: any;
 	setSelectedActions: any;
 	mutate: Function;
-	isValidating: Boolean;
 }) => {
 	return actions.length > 0 ? (
 		<div className="mb-8">
@@ -51,6 +51,7 @@ const Box = ({
 									steps={steps}
 									flows={flows}
 									tags={tags}
+									profiles={profiles}
 									key={action.id}
 									selected={
 										selectedActions.filter(

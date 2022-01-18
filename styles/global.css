@@ -80,13 +80,13 @@ body {
 	@apply text-white bg-do-500 hover:bg-do-700;
 }
 .doing-bg {
-	@apply text-white bg-doing-500 hover:bg-doing-700;
+	@apply text-white bg-doing-400 hover:bg-doing-600;
 }
 .review-bg {
 	@apply text-white bg-review-500 hover:bg-review-700;
 }
 .done-bg {
-	@apply text-white bg-done-500 hover:bg-done-700;
+	@apply text-white bg-done-700 hover:bg-done-900;
 }
 .accomplished-bg {
 	@apply text-white bg-accomplished-500 hover:bg-accomplished-700;
